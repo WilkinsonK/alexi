@@ -1,3 +1,6 @@
+module;
+#include "util_common.hpp"
+
 export module alexi.token:kind;
 import :action;
 import alexi.util;
@@ -8,7 +11,7 @@ namespace alexi {
     // `alexi::token::Kind` allows alexi to dynamically
     // declare individual tokens that can be parsed by
     // lexical analysis.
-    export struct Kind {
+    export ALEXI_STRUCT(Kind) {
         // The regex pattern used to determine if the next
         // available token matches this definition.
         const Str pattern;
@@ -21,13 +24,21 @@ namespace alexi {
         // or how late this kind should be matched against
         // other kind definitions.
         const Ord order  = 1.0;
+        // Whether this is of a kind that can be naturally
+        // defined. That is, the kind has a static pattern
+        // which it belongs to.
+        //
+        // For example, '{' as a 'BRACE_LEFT' token kind
+        // could be considered natural as the brace itself
+        // has 0 variations.
+        const bool natural = true;
 
-        bool operator==(const Kind &) const;
-        bool operator<(const Kind &) const;
-        bool operator>(const Kind &) const;
+        constexpr bool operator==(const Self &) const;
+        constexpr bool operator<(const Self &) const;
+        constexpr bool operator>(const Self &) const;
     };
 
-    bool Kind::operator==(const Kind &other) const {
+    inline constexpr bool Kind::operator==(const Self &other) const {
         return
             pattern == other.pattern &&
             name == other.name &&
@@ -35,12 +46,25 @@ namespace alexi {
             order == other.order;
     }
 
-    bool Kind::operator<(const Kind &other) const {
+    inline constexpr bool Kind::operator<(const Self &other) const {
         return order < other.order;
     }
 
-    bool Kind::operator>(const Kind &other) const {
+    inline constexpr bool Kind::operator>(const Self &other) const {
         return order > other.order;
+    }
+
+    export constexpr std::ostream &operator<<(std::ostream &os, const Kind &kind) {
+        #define __structfield(N) "."#N"=" << kind . N
+        #define __structstrfield(N) "."#N"=\"" << kind . N << "\""
+        return os << "<Kind{" <<
+            __structstrfield(pattern) << ", " <<
+            __structstrfield(name) << ", " <<
+            __structfield(action) << ", " <<
+            __structfield(order) <<
+        "}>";
+        #undef __structstrfield
+        #undef __structfield
     }
 }
 
@@ -72,18 +96,5 @@ export namespace std {
         size_t seed = hash<string_view>{}(kind.pattern);
         hash_combine(seed, hx, 3);
         return seed;
-    }
-
-    constexpr ostream &operator<<(ostream &os, const Kind &kind) {
-        #define __structfield(N) "."#N"=" << kind . N
-        #define __structstrfield(N) "."#N"=\"" << kind . N << "\""
-        return os << "Kind{" <<
-            __structstrfield(pattern) << ", " <<
-            __structstrfield(name) << ", " <<
-            __structfield(action) << ", " <<
-            __structfield(order) <<
-        "}";
-        #undef __structstrfield
-        #undef __structfield
     }
 }

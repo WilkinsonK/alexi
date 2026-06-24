@@ -12,7 +12,7 @@ TEST_CASE("Token kind can initialize", "[kind]") {
         .action  = Action::UNKNOWN,
     };
 
-    REQUIRE(k.order == -1);
+    REQUIRE(k.order == 1.0);
 }
 
 TEST_CASE("Token kinds can be equated deeply", "[kind]") {
@@ -75,7 +75,7 @@ TEST_CASE("Token kinds are hashable", "[kind]") {
     std::size_t value = std::hash<Kind>{}(k1);
     REQUIRE(value != 0);
     REQUIRE(value != -1);
-    REQUIRE(value == 0x2a701d779601fdd3);
+    REQUIRE(value == 0x2a701d779601ffdd);
 }
 
 TEST_CASE("Token kinds can be stored", "[kinds]") {

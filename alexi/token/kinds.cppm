@@ -8,23 +8,23 @@ namespace alexi {
         // Adds an `alexi::token::Kind` into this container
         // if the new entry is unique.
         // returns a `boolean` if the add was successful.
-        inline bool add(const Kind kind);
+        bool add(const Kind kind);
         // Has an `alexi::token::Kind` removed from this
         // container.
-        inline std::shared_ptr<Kind> drop(const Str);
+        std::shared_ptr<Kind> drop(const Str);
         // Gets a reference to an `alexi::token::Kind` from
         // this container.
-        inline const std::shared_ptr<Kind> find(const Str) const;
+        const std::shared_ptr<Kind> find(const Str) const;
         // Gets a reference to an `alexi::token::Kind` from
         // this container.
-        const std::shared_ptr<Kind> operator[](const Str) const;
+        constexpr const std::shared_ptr<Kind> operator[](const Str) const;
         // Has an `alexi::token::Kind` removed from this
         // container.
-        std::shared_ptr<Kind> operator()(const Str);
+        constexpr std::shared_ptr<Kind> operator()(const Str);
         // Adds an `alexi::token::Kind` into this container
         // if the new entry is unique.
         // returns a `boolean` if the add was successful.
-        bool operator|=(const Kind);
+        constexpr bool operator|=(const Kind);
     };
 
     inline bool Kinds::add(const Kind kind) {
@@ -42,15 +42,15 @@ namespace alexi {
         return inner.extract(find(name)).value();
     }
 
-    const std::shared_ptr<Kind> Kinds::operator[](const Str name) const {
+    constexpr inline const std::shared_ptr<Kind> Kinds::operator[](const Str name) const {
         return find(name);
     }
 
-    std::shared_ptr<Kind> Kinds::operator()(const Str name) {
+    constexpr inline std::shared_ptr<Kind> Kinds::operator()(const Str name) {
         return drop(name);
     }
 
-    bool Kinds::operator|=(const Kind kind) {
+    constexpr inline bool Kinds::operator|=(const Kind kind) {
         return add(kind);
     }
 }
