@@ -8,18 +8,15 @@
 #include "alexi/location.hpp"
 
 namespace alexi {
-    Token Lexer::eof(void) {
+    constexpr inline Token eof(Mark mark) {
         Kind e{
             .pattern = R"()",
             .name    = "EOF",
             .action  = Action::UEOF,
             .natural = true,
         };
-        return {
-            .kind = std::make_shared<Kind>(e),
-            .view = "",
-            .mark = marker
-        };
+        auto kind = std::make_shared<Kind>(e);
+        return { .kind = kind, .view = "", .mark = mark };
     }
 
     inline constexpr LineNo line_count(const Str &view) {
@@ -71,7 +68,7 @@ namespace alexi {
 
     Token Lexer::next_token(void) {
         if (marker.position >= data.size())
-            return eof();
+            return eof(marker);
         auto token = match_next_token();
         return handle_next_token(std::move(token));
     }

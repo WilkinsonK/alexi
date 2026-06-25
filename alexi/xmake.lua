@@ -9,6 +9,7 @@ function declare_component(name, ...)
 end
 
 components = {
+    declare_component("engine", "alexi_lexer", "alexi_token", "alexi_util"),
     declare_component("lexer", "alexi_match", "alexi_token", "alexi_util"),
     declare_component("match", "alexi_token", "alexi_util"),
     declare_component("token", "alexi_util"),

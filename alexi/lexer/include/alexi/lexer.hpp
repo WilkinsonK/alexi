@@ -13,7 +13,6 @@ namespace alexi {
         Token next_token(void);
 
         private:
-        Token eof(void);
         Token handle_next_token(Token &&token);
         Token match_next_token(void);
     };
