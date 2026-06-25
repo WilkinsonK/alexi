@@ -1,4 +1,4 @@
-set_languages("c++26", "c23")
+set_languages("c++23", "c23")
 set_warnings("all", "error", "pedantic")
 add_rules("plugin.compile_commands.autoupdate")
 add_rules("mode.debug", "mode.release")
@@ -13,7 +13,7 @@ end
 includes("alexi")
 includes("test")
 
-target("alexi")
+target("alexi_main")
     set_kind("binary")
     add_files("main.cpp")
-    add_deps("alexi_shared")
+    add_deps("alexi")

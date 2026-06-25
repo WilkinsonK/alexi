@@ -1,7 +1,10 @@
 #pragma clang diagnostic ignored "-Wc2y-extensions"
 #include <catch2/catch_test_macros.hpp>
-import alexi.token;
-import std;
+
+#include "alexi/action.hpp"
+#include "alexi/kind.hpp"
+#include "alexi/kinds.hpp"
+#include "alexi/matcher.hpp"
 
 using namespace alexi;
 

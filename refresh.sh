@@ -3,4 +3,5 @@
 # rebuilding the project.
 set -eu -o pipefail
 
+rm -rf ./build
 xmake clean --all && rm ./compile_commands.json && xmake
