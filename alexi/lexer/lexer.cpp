@@ -29,52 +29,29 @@ namespace alexi {
         return std::distance(begin, end);
     }
 
+    inline constexpr bool is_action(const Action action, const Action expect) {
+        return (action & expect) == expect;
+    }
+
     Token Lexer::handle_next_token(Token &&token) {
         const auto action = token.kind->action;
 
-        if (action == Action::CONSUME) {
+        if (is_action(action, Action::MULTILINE))
+            marker >> MarkShifter{ .line = line_count(token.view) };
+        if (is_action(action, Action::CONSUME)) {
             marker >> MarkShifter{ .position = token.size() };
             return token;
         }
-
-        if (action == (Action::CONSUME | Action::MULTILINE)) {
-            marker >> MarkShifter{
-                .position = token.size(),
-                .line     = line_count(token.view)
-            };
-            return token;
+        if (is_action(action, Action::IGNORE)) {
+            marker >> MarkShifter{ .position = token.size() };
+            return next_token();
         }
-
-        if (action == Action::UEOF) {
+        if (is_action(action, Action::UEOF))
             throw std::runtime_error("Unexpected EOF");
-        }
-
-        if (action == Action::IGNORE) {
-            marker >> MarkShifter{ .position = token.size() };
-            return next_token();
-        }
-
-        if (action == (Action::IGNORE | Action::MULTILINE)) {
-            marker >> MarkShifter{
-                .position = token.size(),
-                .line     = line_count(token.view)
-            };
-            return next_token();
-        }
-
-        if (action == Action::MULTILINE) {
-            marker >> MarkShifter{
-                .position = token.size(),
-                .line     = line_count(token.view)
-            };
-            return next_token();
-        }
 
         std::stringstream ss;
         ss << "Unknown token " << token;
         throw std::runtime_error(ss.str());
-
-        return std::move(token);
     }
 
     Token Lexer::match_next_token(void) {
