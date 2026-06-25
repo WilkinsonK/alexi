@@ -17,6 +17,7 @@ components = {
 }
 
 target("alexi")
+    set_version("3.0.0")
     set_kind("shared")
     add_deps(table.unpack(components))
     add_rules("utils.symbols.export_all")

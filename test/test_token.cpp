@@ -4,7 +4,6 @@
 #include "alexi/action.hpp"
 #include "alexi/kind.hpp"
 #include "alexi/kinds.hpp"
-#include "alexi/matcher.hpp"
 
 using namespace alexi;
 
