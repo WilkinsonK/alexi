@@ -12,6 +12,7 @@ namespace alexi {
         const Str                   view;
         const Mark                  mark;
 
+        Action get_action(void) const;
         Self set_mark(const Mark);
         Len size(void) const;
         bool operator==(const Kind &);

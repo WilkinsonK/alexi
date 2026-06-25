@@ -1,21 +1,21 @@
-target("alexi_match")
-    set_kind("static")
-    add_deps("alexi_token", "alexi_util")
-    add_includedirs("match/include", {public = true})
-    add_files("match/*.cpp")
+function declare_component(name, ...)
+    target("alexi_" .. name)
+        set_kind("static")
+        add_deps(...)
+        add_includedirs(name .. "/include", {public = true})
+        add_files(name .. "/*.cpp")
 
-target("alexi_token")
-    set_kind("static")
-    add_deps("alexi_util")
-    add_includedirs("token/include", {public = true})
-    add_files("token/*.cpp")
+        return "alexi_" .. name
+end
 
-target("alexi_util")
-    set_kind("static")
-    add_includedirs("util/include", {public = true})
-    add_files("util/*.cpp")
+components = {
+    declare_component("lexer", "alexi_match", "alexi_token", "alexi_util"),
+    declare_component("match", "alexi_token", "alexi_util"),
+    declare_component("token", "alexi_util"),
+    declare_component("util")
+}
 
 target("alexi")
     set_kind("shared")
-    add_deps("alexi_match", "alexi_token", "alexi_util")
-    add_rules("utils.symbols.export_all", {export_classes = true})
+    add_deps(table.unpack(components))
+    add_rules("utils.symbols.export_all")

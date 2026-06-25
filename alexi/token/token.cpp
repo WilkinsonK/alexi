@@ -29,6 +29,7 @@ namespace alexi {
             __strcase(CONSUME);
             __strcase(IGNORE);
             __strcase(MULTILINE);
+            __strcase(UEOF);
             __strcase(UNKNOWN);
         };
         return os;
@@ -96,6 +97,14 @@ namespace alexi {
         return inner.insert(std::make_shared<Kind>(kind)).second;
     }
 
+    Kinds::iterator Kinds::begin(void) {
+        return inner.begin();
+    }
+
+    Kinds::const_iterator Kinds::begin(void) const {
+        return inner.begin();
+    }
+
     const std::shared_ptr<Kind> Kinds::find(const Str name) const {
         auto response = inner | std::views::filter([name](const auto &k) { return k->name == name; });
         if (response.begin() != response.end())
@@ -118,9 +127,21 @@ namespace alexi {
     bool Kinds::operator|=(const Kind kind) {
         return add(kind);
     }
+
+    Kinds::iterator Kinds::end(void) {
+        return inner.end();
+    }
+
+    Kinds::const_iterator Kinds::end(void) const {
+        return inner.end();
+    }
 }
 
 namespace alexi {
+    Action Token::get_action(void) const {
+        return kind->action;
+    }
+
     Token Token::set_mark(const Mark mark) {
         return {
             .kind = kind,
@@ -138,21 +159,27 @@ namespace alexi {
     }
 
     bool Token::operator==(const char *other) {
-        return view == other;
+        return kind->name == other;
     }
 
     bool Token::operator==(const Str &other) {
-        return view == other;
+        return kind->name == other;
     }
 
     bool Token::operator==(const StrV &other) {
-        return view == other;
+        return kind->name == other;
     }
 
     std::ostream &operator<<(std::ostream &os, const Token &token) {
         os << "<Token[" << token.kind->name << "]";
-        if (token.kind->natural) os << " {" << token.view << "}";
-        os << ">";
-        return os;
+
+        auto file    = token.mark.file;
+        auto lnumber = token.mark.line.id;
+        auto loffset = token.mark.position - token.mark.line.position;
+        os << " [" << file << "@" << lnumber << ":" << loffset << "]";
+
+        if (!token.kind->natural) os << " {" << token.view << "}";
+
+        return os << ">";
     }
 }

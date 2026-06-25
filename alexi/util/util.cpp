@@ -8,8 +8,11 @@ namespace alexi {
     }
 
     Marker Marker::shift(const MarkShifter &s) {
+        if (s.line > 0)
+            // Only update line position if line is updated too.
+            shift_line(s.line, s.line_position == 0 ? position : s.line_position);
+        // Always update marker position regardless.
         shift_position(s.position);
-        shift_line(s.line, s.line_position == 0 ? position : s.line_position);
         return *this;
     }
 

@@ -7,6 +7,7 @@
 namespace alexi {
     struct Kinds {
         std::set<std::shared_ptr<Kind>> inner;
+
         // Adds an `alexi::token::Kind` into this container
         // if the new entry is unique.
         // returns a `boolean` if the add was successful.
@@ -27,5 +28,13 @@ namespace alexi {
         // if the new entry is unique.
         // returns a `boolean` if the add was successful.
         bool operator|=(const Kind);
+
+        using iterator = std::set<std::shared_ptr<Kind>>::iterator;
+        using const_iterator = std::set<std::shared_ptr<Kind>>::const_iterator;
+
+        iterator begin(void);
+        const_iterator begin(void) const;
+        iterator end(void);
+        const_iterator end(void) const;
     };
 }

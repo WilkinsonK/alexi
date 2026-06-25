@@ -24,7 +24,7 @@ namespace alexi {
 
     const Path   FILE_DEFAULT     = "__main__";
     const Line   LINE_DEFAULT     = {};
-    const Offset POSITION_DEFAULT = 0;
+    const Offset POSITION_DEFAULT = 1;
 
     #define MARK_ATTRS \
         MARK_DEF Path   file     = FILE_DEFAULT; \

@@ -3,6 +3,7 @@
 #include <regex>
 
 #include "alexi/aliases.hpp"
+#include "alexi/kinds.hpp"
 #include "alexi/token.hpp"
 
 namespace alexi {
@@ -44,9 +45,26 @@ namespace alexi {
         const std::regex            pattern;
         const std::shared_ptr<Kind> kind;
 
-        static Matcher from(const Kind &other);
-        static Matcher from(std::shared_ptr<Kind> other);
-        Opt<Token> match(const Str &view);
-        Opt<Token> match(const StrV &view);
+        Matcher(const Kind &);
+        Matcher(std::shared_ptr<Kind>);
+
+        static Matcher from(const Kind &);
+        static Matcher from(std::shared_ptr<Kind>);
+        Opt<Token> match(const Str &, const Mark = {});
+        Opt<Token> match(const StrV &, const Mark = {});
+    };
+
+    ALEXI_STRUCT(Matchers) {
+        std::vector<std::shared_ptr<Matcher>> inner;
+
+        Matchers(const Kinds &);
+
+        using iterator = std::vector<std::shared_ptr<Matcher>>::iterator;
+        using const_iterator = std::vector<std::shared_ptr<Matcher>>::const_iterator;
+
+        iterator begin(void);
+        const_iterator begin(void) const;
+        iterator end(void);
+        const_iterator end(void) const;
     };
 }
