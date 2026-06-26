@@ -18,5 +18,7 @@ jobs:
       with:
         xmake-version: latest
         build-cache: true
-    - name: make
-      run: make
+    - name: Build
+      run: xmake build
+    - name: Test
+      run: xmake test -y
