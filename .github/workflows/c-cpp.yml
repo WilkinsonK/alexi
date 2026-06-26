@@ -1,16 +1,12 @@
 name: C/C++ CI
-
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Setup xmake
@@ -20,5 +16,14 @@ jobs:
         build-cache: true
     - name: Build
       run: xmake build -y
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup xmake
+      uses: xmake-io/github-action-setup-xmake@v1
+      with:
+        xmake-version: latest
+        build-cache: true
     - name: Test
       run: xmake test -y
