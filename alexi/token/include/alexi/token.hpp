@@ -15,10 +15,10 @@ namespace alexi {
 
         Action get_action(void) const;
         Len size(void) const;
-        bool operator==(const Kind &);
-        bool operator==(const char *);
-        bool operator==(const Str &);
-        bool operator==(const StrV &);
+        bool operator==(const Kind &) const;
+        bool operator==(const char *) const;
+        bool operator==(const Str &) const;
+        bool operator==(const StrV &) const;
     };
 
     std::ostream &operator<<(std::ostream &, const Token &);
