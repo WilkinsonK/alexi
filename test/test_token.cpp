@@ -14,7 +14,7 @@ TEST_CASE("Token kind can initialize", "[kind]") {
         .action  = Action::UNKNOWN,
     };
 
-    REQUIRE(k.order == 1.0);
+    REQUIRE(k.order == .1);
 }
 
 TEST_CASE("Token kinds can be equated deeply", "[kind]") {

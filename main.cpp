@@ -1,29 +1,26 @@
 #include "alexi/engine.hpp"
+#include "alexi/kinds.hpp"
 
 using namespace alexi;
 
 int main(void) {
-    auto lex = Engine::from_data("lorem ipsum\ndelor amet\ngreat googly moogily")
-        .use_kind({
-            .pattern = R"(^[A-Za-z_]\w*)",
-            .name = "IDENTIFIER",
-            .natural = false,
+    auto lex = Engine()
+        .use_keywords({
+            "let",
+            "use",
+            "kwd"
         })
-        .use_kind({
-            .pattern = R"([ \t\v]+)",
-            .name = "WHITESPACE",
-            .action = Action::IGNORE
+        .use_kinds({
+            kinds::PARENL,
+            kinds::PARENR,
+            kinds::IDENTIFIER
         })
-        .use_kind({
-            .pattern = R"(\r\n|\r|\n)",
-            .name    = "NEWLINE",
-            .action  = Action::IGNORE | Action::MULTILINE
-        }).generate();
+        .from_data("(lorem use ipsum]\ndelor amet\ngreat googly moogily)\n\n");
 
     while (1) {
         auto t = lex.next_token();
-        if (t == "EOF") break;
         std::cout << t << std::endl;
+        if (t == "EOF") break;
     }
     return 0;
 }

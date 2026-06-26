@@ -7,15 +7,18 @@
 
 namespace alexi {
     ALEXI_STRUCT(Engine) {
-        Str    data;
-        Marker marker;
-        Kinds  kinds;
+        Vec<Str> keywords = {};
+        Kinds    kinds;
 
-        static Self from_data(const Str&);
-        static Self from_file(const Path&);
+        Engine(void);
 
-        Lexer generate(void);
-        Self use_data(const Str&);
-        Self use_kind(const Kind&);
+        Lexer from_data(const Str&);
+        Lexer from_file(const Path&);
+        Self use_keywords(const Str&);
+        Self use_keywords(const Vec<Str>&);
+        Self use_keywords(const Vec<Str>::const_iterator&, const Vec<Str>::const_iterator&);
+        Self use_kinds(const Kind&);
+        Self use_kinds(const Vec<Kind>&);
+        Self use_kinds(const Vec<Kind>::const_iterator&, const Vec<Kind>::const_iterator&);
     };
 }

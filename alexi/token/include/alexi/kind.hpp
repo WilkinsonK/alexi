@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "alexi/aliases.hpp"
 #include "alexi/action.hpp"
 
@@ -20,7 +22,7 @@ namespace alexi {
         // The order or precedence which determines how soon
         // or how late this kind should be matched against
         // other kind definitions.
-        const Ord order  = 1.0;
+        const Ord order  = .1;
         // Whether this is of a kind that can be naturally
         // defined. That is, the kind has a static pattern
         // which it belongs to.
@@ -28,7 +30,13 @@ namespace alexi {
         // For example, '{' as a 'BRACE_LEFT' token kind
         // could be considered natural as the brace itself
         // has 0 variations.
-        const bool natural = true;
+        const bool natural = false;
+        // A secondary validation which allows some `Kind`
+        // to only be viable if a match also meets the
+        // predicate.
+        const TokenValidator predicate = [](auto _){ return true; };
+
+        std::shared_ptr<Self> to_shared(void);
 
         bool operator==(const Self &) const;
         bool operator<(const Self &) const;

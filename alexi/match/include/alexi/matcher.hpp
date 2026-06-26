@@ -54,17 +54,18 @@ namespace alexi {
         Opt<Token> match(const StrV &, const Mark = {});
     };
 
+
     ALEXI_STRUCT(Matchers) {
-        std::vector<std::shared_ptr<Matcher>> inner;
+        using Inner     = Vec<std::shared_ptr<Matcher>>;
+        using Iter      = Inner::iterator;
+        using ConstIter = Inner::const_iterator;
+
+        Inner inner;
 
         Matchers(const Kinds &);
-
-        using iterator = std::vector<std::shared_ptr<Matcher>>::iterator;
-        using const_iterator = std::vector<std::shared_ptr<Matcher>>::const_iterator;
-
-        iterator begin(void);
-        const_iterator begin(void) const;
-        iterator end(void);
-        const_iterator end(void) const;
+        Iter begin(void);
+        ConstIter begin(void) const;
+        Iter end(void);
+        ConstIter end(void) const;
     };
 }

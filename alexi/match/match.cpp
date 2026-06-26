@@ -1,3 +1,6 @@
+#include <algorithm>
+#include <memory>
+
 #include "alexi/matcher.hpp"
 
 namespace alexi {
@@ -24,31 +27,34 @@ namespace alexi {
 
     Opt<Token> Matcher::match(const StrV &view, const Mark mark) {
         auto found = Match<std::cmatch>(view, pattern);
-        if (found.size() < 1) return std::nullopt;
-        return Token {
-            .kind = kind,
-            .view = Str(found[0]),
-            .mark = mark
-        };
+        if (found.size() < 1 || !kind->predicate(found[0]))
+            return std::nullopt;
+        return Token { .kind = kind, .view = Str(found[0]), .mark = mark };
     }
 
     Matchers::Matchers(const Kinds &kinds) : inner{} {
-        for (auto const &k : kinds) inner.push_back(std::make_shared<Matcher>(k));
+        std::for_each(kinds.begin(), kinds.end(), [&](const auto &kind) {
+            inner.push_back(std::make_shared<Matcher>(kind));
+        });
+
+        std::sort(begin(), end(), [](const auto &lhs, const auto &rhs) {
+            return *lhs->kind < *rhs->kind;
+        });
     }
 
-    Matchers::iterator Matchers::begin(void) {
+    Matchers::Iter Matchers::begin(void) {
         return inner.begin();
     }
 
-    Matchers::const_iterator Matchers::begin(void) const {
+    Matchers::ConstIter Matchers::begin(void) const {
         return inner.begin();
     }
 
-    Matchers::iterator Matchers::end(void) {
+    Matchers::Iter Matchers::end(void) {
         return inner.end();
     }
 
-    Matchers::const_iterator Matchers::end(void) const {
+    Matchers::ConstIter Matchers::end(void) const {
         return inner.end();
     }
 }

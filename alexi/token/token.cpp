@@ -38,6 +38,10 @@ namespace alexi {
 }
 
 namespace alexi {
+    std::shared_ptr<Kind> Kind::to_shared(void) {
+        return std::make_shared<Kind>(*this);
+    }
+
     bool Kind::operator==(const Self &other) const {
         return
             pattern == other.pattern &&
@@ -142,14 +146,6 @@ namespace alexi {
         return kind->action;
     }
 
-    Token Token::set_mark(const Mark mark) {
-        return {
-            .kind = kind,
-            .view = view,
-            .mark = mark
-        };
-    }
-
     Len Token::size(void) const {
         return view.size();
     }
@@ -181,5 +177,21 @@ namespace alexi {
         if (!token.kind->natural) os << " {" << token.view << "}";
 
         return os << ">";
+    }
+}
+
+namespace alexi::kinds {
+    Kind KEYWORD(const Vec<Str> keywords) {
+        return {
+            .pattern = pattern::IDENTIFIER,
+            .name = "KEYWORD",
+            .order = 0.7,
+            .predicate = [keywords](auto view) {
+                return std::find(
+                    std::begin(keywords),
+                    std::end(keywords),
+                    view) != std::end(keywords);
+            }
+        };
     }
 }

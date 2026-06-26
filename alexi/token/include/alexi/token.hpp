@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 
 #include "alexi/aliases.hpp"
 #include "alexi/location.hpp"
@@ -13,7 +14,6 @@ namespace alexi {
         const Mark                  mark;
 
         Action get_action(void) const;
-        Self set_mark(const Mark);
         Len size(void) const;
         bool operator==(const Kind &);
         bool operator==(const char *);
