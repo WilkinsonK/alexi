@@ -84,7 +84,7 @@ namespace std {
         return hash_combine(seed, ++hx, --hx_n);
     }
 
-    size_t hash<Kind>::operator()(const Kind& kind) const {
+    size_t hash<Kind>::operator()(const Kind &kind) const {
         size_t hx[3] = {
             hash<string>{}(kind.name),
             hash<int>{}(static_cast<int>(kind.action)),
@@ -150,19 +150,19 @@ namespace alexi {
         return view.size();
     }
 
-    bool Token::operator==(const Kind &other) {
+    bool Token::operator==(const Kind &other) const {
         return *kind == other;
     }
 
-    bool Token::operator==(const char *other) {
+    bool Token::operator==(const char *other) const {
         return kind->name == other;
     }
 
-    bool Token::operator==(const Str &other) {
+    bool Token::operator==(const Str &other) const {
         return kind->name == other;
     }
 
-    bool Token::operator==(const StrV &other) {
+    bool Token::operator==(const StrV &other) const {
         return kind->name == other;
     }
 
