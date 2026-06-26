@@ -1,3 +1,5 @@
+set_warnings("all", "error", "pedantic")
+
 function declare_component(name, ...)
     target("alexi_" .. name)
         set_kind("static")

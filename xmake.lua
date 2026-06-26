@@ -1,5 +1,4 @@
 set_languages("c++23", "c23")
-set_warnings("all", "error", "pedantic")
 add_rules("plugin.compile_commands.autoupdate")
 add_rules("mode.debug", "mode.release")
 

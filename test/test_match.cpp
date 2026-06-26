@@ -1,4 +1,3 @@
-#pragma clang diagnostic ignored "-Wc2y-extensions"
 #include <optional>
 
 #include <catch2/catch_test_macros.hpp>
