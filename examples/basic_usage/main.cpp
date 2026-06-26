@@ -15,7 +15,7 @@ int main(void) {
             kinds::PARENR,
             kinds::IDENTIFIER
         })
-        .from_data("(lorem use ipsum]\ndelor amet\ngreat googly moogily)\n\n");
+        .from_data("(lorem use ipsum\ndelor amet\ngreat googly moogily)\n\n");
 
     while (1) {
         auto t = lex.next_token();

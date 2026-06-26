@@ -1,0 +1,5 @@
+kwd "kwd";
+kwd "use";
+
+use SEMICOLON;
+use IDENTIFIER;

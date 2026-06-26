@@ -27,8 +27,8 @@ namespace alexi {
 
     template <typename T>
     std::ostream &operator<<(std::ostream &os, const Opt<T> opt) {
-        if (opt.has_value()) return std::cout << "Some(" << opt.value() << ")";
-        else return std::cout << "None";
+        if (opt.has_value()) return os << "Some(" << opt.value() << ")";
+        else return os << "None";
     }
 
     template <typename S>

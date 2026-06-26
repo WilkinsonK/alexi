@@ -1,6 +1,11 @@
 #include <algorithm>
+#include <cerrno>
+#include <cstring>
+#include <format>
 #include <fstream>
+#include <iostream>
 #include <initializer_list>
+#include <stdexcept>
 
 #include "alexi/engine.hpp"
 #include "alexi/kinds.hpp"
@@ -22,8 +27,12 @@ namespace alexi {
 
     inline constexpr Str read(const Path &path) {
         std::fstream fd(path);
-        if (fd.fail())
-            return "";
+        if (!fd)
+            throw std::runtime_error(std::format(
+                R"("{}": {})",
+                path.c_str(),
+                std::strerror(errno)
+            ));
         return read(fd);
     }
 

@@ -1,3 +1,4 @@
+set_default(false)
 add_requires("catch2 v3.15.1")
 
 function declare_suite_tests(...)
