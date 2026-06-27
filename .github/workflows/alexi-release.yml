@@ -80,7 +80,7 @@ jobs:
           build-cache: true
       - name: Install LLVM-MinGW Toolchain
         run: |
-          curl -L -o llvm-mingw.tar.xz https://github.com
+          curl -L -o llvm-mingw.tar.xz https://github.com/mstorsjo/llvm-mingw/releases/download/20231128/llvm-mingw-20231128-ucrt-x86_64.tar.xz
           mkdir -p opt/llvm-mingw
           tar -xf llvm-mingw.tar.xz -C opt/llvm-mingw --strip-components=1
           echo "$GITHUB_WORKSPACE/opt/llvm-mingw/bin" >> $GITHUB_PATH
