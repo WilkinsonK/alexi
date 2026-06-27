@@ -1,4 +1,7 @@
 name: Alexi Release
+permissions:
+  contents: write
+  packages: write
 
 on:
   workflow_dispatch:
@@ -27,15 +30,12 @@ jobs:
           xmake install -o staging_linux_arm64
           tar -czvf release_packages/alexi-linux-arm64.tar.gz -C staging_linux_arm64 .
       - name: Create GitHub Release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: release_packages/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
 
   build_macos:
     name: Build macOS Universal
@@ -57,15 +57,12 @@ jobs:
           xmake install -o staging_macos
           tar -czvf release_packages/alexi-macos-universal.tar.gz -C staging_macos .
       - name: Create GitHub Release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: release_packages/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
 
   build_windows:
     name: Build Windows x64
@@ -80,7 +77,7 @@ jobs:
           build-cache: true
       - name: Install LLVM-MinGW Toolchain
         run: |
-          curl -L -o llvm-mingw.tar.xz https://github.com/mstorsjo/llvm-mingw/releases/download/20231128/llvm-mingw-20231128-ucrt-x86_64.tar.xz
+          curl -L -o llvm-mingw.tar.xz https://github.com/mstorsjo/llvm-mingw/releases/download/20260616/llvm-mingw-20260616-ucrt-ubuntu-22.04-x86_64.tar.xz
           mkdir -p opt/llvm-mingw
           tar -xf llvm-mingw.tar.xz -C opt/llvm-mingw --strip-components=1
           echo "$GITHUB_WORKSPACE/opt/llvm-mingw/bin" >> $GITHUB_PATH
@@ -94,12 +91,9 @@ jobs:
           cd staging_windows_x64 && zip -r ../release_packages/my_shared_lib-windows-x64.zip . && cd ..
           xmake c -c
       - name: Create GitHub Release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: release_packages/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
