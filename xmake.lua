@@ -9,6 +9,11 @@ if is_host("macosx") then
     set_config("runtimes", "c++_shared")
 end
 
+option("testing")
+    set_default(false)
+    set_showmenu(true)
+    set_description("Builds project tests")
+
 includes("alexi")
 includes("examples")
 includes("test")

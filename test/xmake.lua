@@ -1,6 +1,4 @@
 set_default(false)
-add_requires("catch2 v3.15.1")
-
 
 function declare_suite_tests(...)
     local tags = table.pack(...)
@@ -19,6 +17,9 @@ function declare_suite(name, ...)
         declare_suite_tests(...)
 end
 
-declare_suite("lexer", "lexer")
-declare_suite("token", "kind", "kinds")
-declare_suite("match", "match")
+if has_config("testing") then
+    add_requires("catch2 v3.15.1")
+    declare_suite("lexer", "lexer")
+    declare_suite("token", "kind", "kinds")
+    declare_suite("match", "match")
+end
