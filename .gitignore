@@ -5,6 +5,8 @@ build/
 
 # Additional build artifacts
 compile_commands.json
+release_packages/
+staging*/
 
 # MacOS Cache
 .DS_Store

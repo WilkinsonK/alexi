@@ -18,7 +18,7 @@ else
     ARCHIVE_COMMAND="tar -czvf release_packages/${ARCHIVE_NAME}.tar.gz -C ${INSTALL_NAME} ."
 fi
 
-if [[ $PLATFORM = "linux"]]; then
+if [[ $PLATFORM = "linux" ]]; then
     xmake f -m release -p ${PLATFORM} -a ${ARCH} --toolchain=${TOOLCHAIN}
 fi
 
