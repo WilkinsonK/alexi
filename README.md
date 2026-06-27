@@ -45,7 +45,7 @@ are included before producing a lexer.
 |**from_data**|2|`Lexer`|
 |**from_file**|2|`Lexer`|
 |**use_keywords**|3|`Engine`|
-|**use_kind**|3|`Kind`|
+|**use_kind**|3|`Engine`|
 
 ### Kind
 ### Matcher

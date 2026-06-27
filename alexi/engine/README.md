@@ -1,5 +1,4 @@
-# Alexi
-## Engine
+# Alexi Engine
 The `Engine` type is perhaps the highest level type in **Alexi**. This type
 allows us to preconfigure the anticipated behavior of any `Lexer`s generated
 from it. The core intent is to be able define allowed *token types* (We use
