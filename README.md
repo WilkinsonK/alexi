@@ -48,8 +48,53 @@ are included before producing a lexer.
 |**use_kind**|3|`Engine`|
 
 ### Kind
+The `Kind` type is an `Alexi` primitive. When declared, it describes the rules
+of what a `Token` should look like and how it should be handled. We use this
+type throughout the rest of the library as the foundation for all other types.
+This allows us to drive analysis according to whatever the expected syntax of
+a given input should be.
+
+#### Kind Rules
+There are some rules that govern a `Kind`:
+
+- A `Kind` must be unique to other `Kind` definitions.
+- A `Kind` must have a unique name.
+- A `Kind` pattern may be shared with other `Kind`s, but must use the `Kind::predicate` to be distinguished from other `Kinds`.
+- `Kind::pattern` may not capture all possible characters (`R"(.*)"`).
+- The `Kind::order` must be a `float` between **0** and **1**.
+- The `Kind::action` as a bit map must not contain both `Action::CONSUME` and `Action::IGNORE`. `Action::CONSUME` will override `Action::IGNORE`.
+- The `Kind::action` cannot be `Action::NOTHING`. This will produce and error.
+
+#### Example Kind
+
+```cpp
+#include "alexi/kind.hpp"
+
+using namespace alexi;
+
+static const Kind my_kind{
+    .pattern = R"(\w+)",
+    .name    = "WORD",
+    // .action    = Action::CONSUME,
+    // .order     = 0.1,
+    // .natural   = false,
+    // .predicate = [](auto _){ return true; }
+};
+```
+
+#### Kind Attributes
+`Kind` member attributes can be found [here][3].
+
+#### Predefined Kinds
+Since most syntaxes are often reused or rarely change, `Alexi` provides a series
+of predefined `Kind`s that can be found [here][2]. These definitions include
+syntaxes for arithmetic operations, unnatural identifiers, strings and many
+more.
+
 ### Matcher
 ### Lexer
 ### Token
 
 [1]: alexi/engine/README.md
+[2]: alexi/token/include/alexi/kinds.hpp
+[3]: alexi/token/include/alexi/kind.hpp
