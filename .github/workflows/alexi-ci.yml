@@ -35,3 +35,50 @@ jobs:
       run: xmake test test_token/kinds
     - name: Test kind declaration
       run: xmake test test_token/kind
+  build_linux:
+    name: Build Linux arm64
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+          build-cache: true
+      - name: Prepare Artifacts Directory
+        run: mkdir -p release_packages
+      - name: Build & Package Linux AArch64
+        run: PLATFORM="linux" ARCH="arm64" TOOLCHAIN="@zig" scripts/cibuild.sh
+  build_macos:
+    name: Build macOS Universal
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+          build-cache: true
+      - name: Prepare Artifacts Directory
+        run: mkdir -p release_packages
+      - name: Build & Package macOS Universal
+        run: PLATFORM="macosx" ARCH="x86_64,arm64" scripts/cibuild.sh
+  build_win64:
+    name: Build Windows x64
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+          build-cache: true
+      - name: Install LLVM-MinGW Toolchain
+        run: scripts/ciwinstall.sh >> $GITHUB_PATH
+      - name: Prepare Artifacts Directory
+        run: mkdir -p release_packages
+      - name: Build & Package Windows x86_64
+        run: PLATFORM="windows" ARCH="x64" TOOLCHAIN="mingw" scripts/cibuild.sh
