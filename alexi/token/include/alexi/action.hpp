@@ -4,13 +4,26 @@
 
 namespace alexi {
     using Flag = unsigned long;
+    // Determines token handling behavior if/when a lexer
+    // is able to match some token.
     enum class Action : Flag {
-        NOTHING   = 0,
-        CONSUME   = 1 << 0,
-        IGNORE    = 1 << 1,
+        // Should not be used. Is effectively "UNKNOWN".
+        NOTHING = 0,
+        // Consume the token and return it. Move the lexer
+        // forward.
+        CONSUME = 1 << 0,
+        // Ignore the token and continue looking for
+        // another. Move the lexer forward.
+        IGNORE = 1 << 1,
+        // Token is potentially a multiline value. Consume
+        // or ignore, move the lexer forward and update the
+        // line counter.
         MULTILINE = 1 << 3,
-        UEOF      = 1 << 4,
-        UNKNOWN   = 1 << sizeof(Flag)
+        // Technically an unexpected EOF. Either quit
+        // analysis or panic.
+        UEOF = 1 << 4,
+        // Panic as the token is not known to the lexer.
+        UNKNOWN = 1 << sizeof(Flag)
     };
 
     Action operator&(const Action &, const Action &);

@@ -1,3 +1,4 @@
+#include <format>
 #include <iterator>
 #include <memory>
 #include <regex>
@@ -8,16 +9,6 @@
 #include "alexi/location.hpp"
 
 namespace alexi {
-    inline constexpr Token eof(Mark mark) {
-        Kind e{
-            .pattern = R"()",
-            .name    = "EOF",
-            .action  = Action::UEOF,
-            .natural = true,
-        };
-        return { .kind = e.to_shared(), .view = "", .mark = mark };
-    }
-
     inline constexpr LineNo line_count(const Str &view) {
         const std::regex NEWLINE_REGEX(R"(\r\n|\r|\n)");
         auto begin = std::sregex_iterator(view.begin(), view.end(), NEWLINE_REGEX);
@@ -62,12 +53,12 @@ namespace alexi {
             if (!t.has_value()) continue;
             return t.value();
         }
-        throw std::runtime_error("Hit unreachable branch: no token matched");
+        throw std::runtime_error(std::format("Hit unreachable branch: no token matched '{}'", view));
     }
 
     Token Lexer::next_token(void) {
         if (marker.position-1 >= data.size())
-            return eof(marker);
+            return Token::UEOF(marker);
         auto token = match_next_token();
         return handle_next_token(std::move(token));
     }

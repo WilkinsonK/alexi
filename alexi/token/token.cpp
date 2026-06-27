@@ -38,7 +38,7 @@ namespace alexi {
 }
 
 namespace alexi {
-    std::shared_ptr<Kind> Kind::to_shared(void) {
+    std::shared_ptr<Kind> Kind::to_shared(void) const {
         return std::make_shared<Kind>(*this);
     }
 
@@ -142,6 +142,14 @@ namespace alexi {
 }
 
 namespace alexi {
+    Token Token::UEOF(const Mark &mark) {
+        return {
+            .kind = kinds::UEOF.to_shared(),
+            .view = "",
+            .mark = mark
+        };
+    }
+
     Action Token::get_action(void) const {
         return kind->action;
     }

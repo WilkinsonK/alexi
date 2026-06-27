@@ -25,5 +25,13 @@ jobs:
       with:
         xmake-version: latest
         build-cache: true
-    - name: Test
-      run: xmake test -y
+    - name: Build xmake build -y
+      run: xmake build -y
+    - name: Test lexer
+      run: xmake test test_lexer/lexer
+    - name: Test matcher rules
+      run: xmake test test_matcher/matcher
+    - name: Test kind collection handling
+      run: xmake test test_token/kinds
+    - name: Test kind declaration
+      run: xmake test test_token/kind

@@ -163,7 +163,7 @@ const Statement AlexiParser::parse<Vec<Statement>>(void) {
 
 const Statement AlexiParser::parse(void) {
     const auto t = eat();
-    if (t == "EOF") return {};
+    if (t == kinds::UEOF) return {};
     // TODO: How do I want to determine what I'm parsing?
     if (t == "KEYWORD" && t.view == "kwd") return parse<KwdStatement>();
     if (t == "KEYWORD" && t.view == "use") return parse<UseStatement>();

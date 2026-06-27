@@ -36,7 +36,8 @@ namespace alexi {
         // predicate.
         const TokenValidator predicate = [](auto _){ return true; };
 
-        std::shared_ptr<Self> to_shared(void);
+        // Return a `shared_ptr` to the `Kind`.
+        std::shared_ptr<Self> to_shared(void) const;
 
         bool operator==(const Self &) const;
         bool operator<(const Self &) const;

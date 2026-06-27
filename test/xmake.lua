@@ -18,5 +18,6 @@ function declare_suite(name, ...)
         declare_suite_tests(...)
 end
 
+declare_suite("lexer", "lexer")
 declare_suite("token", "kind", "kinds")
 declare_suite("match", "match")

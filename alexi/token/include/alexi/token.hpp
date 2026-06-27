@@ -13,6 +13,8 @@ namespace alexi {
         const Str                   view;
         const Mark                  mark;
 
+        static Self UEOF(const Mark &);
+
         Action get_action(void) const;
         Len size(void) const;
         bool operator==(const Kind &) const;
