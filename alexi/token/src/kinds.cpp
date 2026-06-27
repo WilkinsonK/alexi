@@ -4,7 +4,7 @@
 
 namespace alexi::kinds {
     bool Self::add(const Kind kind) {
-        return inner.insert(kind.to_shared()).second;
+        return inner.insert(kind.validate().to_shared()).second;
     }
 
     Self::Iter Self::begin(void) {
