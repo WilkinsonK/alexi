@@ -6,6 +6,7 @@ on:
     branches: [ "main" ]
 jobs:
   build:
+    name: Test Local Build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -15,8 +16,9 @@ jobs:
         xmake-version: latest
         build-cache: true
     - name: Build
-      run: xmake build -y
+      run: xmake build
   test:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -26,7 +28,7 @@ jobs:
         xmake-version: latest
         build-cache: true
     - name: Build
-      run: xmake build -y
+      run: xmake f --testing=y && xmake build -y
     - name: Test lexer
       run: xmake test test_lexer/lexer
     - name: Test matcher rules
