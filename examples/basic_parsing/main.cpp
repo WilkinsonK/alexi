@@ -7,10 +7,7 @@
 #include <type_traits>
 #include <variant>
 
-#include "alexi/engine.hpp"
-#include "alexi/kind.hpp"
-#include "alexi/kinds.hpp"
-#include "alexi/token.hpp"
+#include "alexi.hpp"
 
 using namespace std::literals;
 using namespace alexi;
