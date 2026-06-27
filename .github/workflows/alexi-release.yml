@@ -28,10 +28,9 @@ jobs:
           tar -czvf release_packages/alexi-linux-arm64.tar.gz -C staging_linux_arm64 .
       - name: Build & Package Windows x86_64
         run: |
-          xmake f -p windows -a x64 --toolchain=@mingw -m release
+          xmake f -p windows -a x64 --toolchain=@llvm-mingw -m release
           xmake
           xmake install -o staging_windows_x64
-          # Zip the Windows artifacts (.dll, .lib, and headers)
           cd staging_windows_x64 && zip -r ../release_packages/alexi-windows-x64.zip . && cd ..
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
