@@ -1,0 +1,16 @@
+[
+  {
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "label": "Debug basic_parsing",
+    "program": "build/macosx/arm64/debug/basic_parsing",
+    "build": "build-basic_parsing"
+  },
+  {
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "label": "Debug basic_usage",
+    "program": "build/macosx/arm64/debug/basic_usage",
+    "build": "build-basic_usage"
+  }
+]
