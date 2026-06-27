@@ -15,7 +15,8 @@ namespace alexi::engine {
         matchers.add(kinds::WHITESPACE);
         matchers.add(kinds::NEWLINE);
         matchers.add(kinds::UNKNOWN);
-        matchers.add(kinds::KEYWORD(engine.keywords));
+        if (engine.keywords.size() > 0)
+            matchers.add(kinds::KEYWORD(engine.keywords));
         return matchers;
     };
 
@@ -37,7 +38,7 @@ namespace alexi::engine {
     Self::Engine(void) {}
 
     Lexer Self::from_data(const Str &data) {
-        return from_data(data, FILE_DEFAULT);
+        return from_data(FILE_DEFAULT, data);
     }
 
     Lexer Self::from_data(const Path&file, const Str &data) {
