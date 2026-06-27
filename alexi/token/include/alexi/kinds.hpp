@@ -114,14 +114,14 @@ KINDDECLARE(MATPLUS, R"(\+)")
 KINDDECLARE(MATPLUSEQ, R"(\+=)")
 KINDDECLARE(MATPOW, R"(\*\*)")
 KINDDECLARE(MATPOWEQ, R"(\*\*=)")
-KINDDECLARE(NEWLINE, R"(\r\n|\r|\n)", .action = Action::IGNORE | Action::MULTILINE, .order = .0)
+KINDDECLARE(NEWLINE, R"(\r\n|\r|\n)", .action = Action::IGNORE | Action::MULTILINE, .order = .01)
 KINDDECLARE(PARENL, R"(\()")
 KINDDECLARE(PARENR, R"(\))")
 KINDDECLARE(SEMICOLON, R"(;)")
 KINDDECLARE(SLASH, R"(\\)")
 KINDDECLARE(UEOF, R"()", .action = Action::UEOF)
 KINDDECLARE(UNKNOWN, R"(\S*)", .action = Action::UNKNOWN, .order = .9)
-KINDDECLARE(WHITESPACE, R"([ \t\v]+)", .action = Action::IGNORE, .order = .0)
+KINDDECLARE(WHITESPACE, R"([ \t\v]+)", .action = Action::IGNORE, .order = .01)
 
 namespace alexi::kinds {
     Kind KEYWORD(const Vec<Str>);
