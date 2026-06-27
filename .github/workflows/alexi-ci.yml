@@ -28,7 +28,7 @@ jobs:
         xmake-version: latest
         build-cache: true
     - name: Build
-      run: xmake f --testing=y && xmake build -y
+      run: xmake f --testing=y -y && xmake build -y
     - name: Test lexer
       run: xmake test test_lexer/lexer
     - name: Test matcher rules
