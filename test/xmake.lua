@@ -1,5 +1,8 @@
 set_default(false)
-add_requires("catch2 v3.15.1")
+
+if is_plat(platform) then
+    add_requires("catch2 v3.15.1")
+end
 
 function declare_suite_tests(...)
     local tags = table.pack(...)

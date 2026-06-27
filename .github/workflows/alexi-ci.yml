@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Alexi CI
 on:
   push:
     branches: [ "main" ]
