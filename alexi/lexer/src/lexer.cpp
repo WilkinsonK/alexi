@@ -8,7 +8,7 @@
 #include "alexi/lexer.hpp"
 #include "alexi/location.hpp"
 
-namespace alexi {
+namespace alexi::lexer {
     inline constexpr LineNo line_count(const Str &view) {
         const std::regex NEWLINE_REGEX(R"(\r\n|\r|\n)");
         auto begin = std::sregex_iterator(view.begin(), view.end(), NEWLINE_REGEX);
@@ -20,7 +20,7 @@ namespace alexi {
         return (action & expect) == expect;
     }
 
-    Token Lexer::handle_next_token(Token &&token) {
+    Token Self::handle_next_token(Token &&token) {
         const auto action = token.kind->action;
 
         if (is_action(action, Action::MULTILINE))
@@ -41,7 +41,7 @@ namespace alexi {
         throw std::runtime_error(ss.str());
     }
 
-    Token Lexer::match_next_token(void) {
+    Token Self::match_next_token(void) {
         // We have to sub the marker position as it starts
         // at 1 when the marker is initialized, by default.
         // This helps us avoid an off-by-one error when
@@ -56,7 +56,7 @@ namespace alexi {
         throw std::runtime_error(std::format("Hit unreachable branch: no token matched '{}'", view));
     }
 
-    Token Lexer::next_token(void) {
+    Token Self::next_token(void) {
         if (marker.position-1 >= data.size())
             return Token::UEOF(marker);
         auto token = match_next_token();

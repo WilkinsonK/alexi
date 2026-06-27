@@ -1,10 +1,19 @@
 #pragma once
 
 #include "alexi/aliases.hpp"
-#include "alexi/matcher.hpp"
+#include "alexi/matchers.hpp"
 #include "alexi/token.hpp"
 
+namespace alexi::lexer {
+    struct Lexer;
+    using Self = Lexer;
+}
+
 namespace alexi {
+    using alexi::lexer::Lexer;
+}
+
+namespace alexi::lexer {
     // The main driver of lexical analysis. Reads through
     // a data stream attempting to match against its
     // configured token matchers.

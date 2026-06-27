@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace alexi {
+namespace alexi::action {
     using Flag = unsigned long;
     // Determines token handling behavior if/when a lexer
     // is able to match some token.
@@ -26,9 +26,14 @@ namespace alexi {
         UNKNOWN = 1 << sizeof(Flag)
     };
 
-    Action operator&(const Action &, const Action &);
-    Action operator&=(const Action &, const Action &rhs);
-    Action operator|(const Action &, const Action &);
-    Action operator|=(const Action &, const Action &);
-    std::ostream &operator<<(std::ostream &, const Action &);
+    using Self = Action;
+    Self operator&(const Self &, const Self &);
+    Self operator&=(const Self &, const Self &rhs);
+    Self operator|(const Self &, const Self &);
+    Self operator|=(const Self &, const Self &);
+    std::ostream &operator<<(std::ostream &, const Self &);
+}
+
+namespace alexi {
+    using alexi::action::Action;
 }

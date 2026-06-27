@@ -5,38 +5,49 @@
 #include "alexi/action.hpp"
 #include "alexi/kind.hpp"
 
+namespace alexi::kinds {
+    struct Kinds;
+    using Self = Kinds;
+}
+
 namespace alexi {
+    using alexi::kinds::Kinds;
+}
+
+namespace alexi::kinds {
     struct Kinds {
-        std::set<std::shared_ptr<Kind>> inner;
+        using Item = std::shared_ptr<Kind>;
+        using Inner = std::set<Item>;
+        Inner inner;
 
         // Adds an `alexi::token::Kind` into this container
         // if the new entry is unique.
         // returns a `boolean` if the add was successful.
-        bool add(const Kind kind);
+        bool add(const Kind);
         // Has an `alexi::token::Kind` removed from this
         // container.
-        std::shared_ptr<Kind> drop(const Str);
+        Item drop(const Str);
         // Gets a reference to an `alexi::token::Kind` from
         // this container.
-        const std::shared_ptr<Kind> find(const Str) const;
+        const Item find(const Str) const;
         // Gets a reference to an `alexi::token::Kind` from
         // this container.
-        const std::shared_ptr<Kind> operator[](const Str) const;
+        const Item operator[](const Str) const;
         // Has an `alexi::token::Kind` removed from this
         // container.
-        std::shared_ptr<Kind> operator()(const Str);
+        Item operator()(const Str);
         // Adds an `alexi::token::Kind` into this container
         // if the new entry is unique.
         // returns a `boolean` if the add was successful.
         bool operator|=(const Kind);
 
-        using iterator = std::set<std::shared_ptr<Kind>>::iterator;
-        using const_iterator = std::set<std::shared_ptr<Kind>>::const_iterator;
+        using Iter = Inner::iterator;
+        using ConstIter = Inner::const_iterator;
 
-        iterator begin(void);
-        const_iterator begin(void) const;
-        iterator end(void);
-        const_iterator end(void) const;
+        Iter begin(void);
+        ConstIter begin(void) const;
+        Iter end(void);
+        ConstIter end(void) const;
     };
 }
 
@@ -74,7 +85,7 @@ KINDDECLARE(DOLLAR, R"(\$)")
 KINDDECLARE(DOT, R"(\.)")
 KINDDECLARE(DOTDOT, R"(\.\.)")
 KINDDECLARE(DOTEQ, R"(\.=)")
-KINDDECLARE(UEOF, R"()", .action = Action::UEOF)
+KINDDECLARE(ELLIPSIS, R"(\.\.\.)")
 KINDDECLARE(IDENTIFIER, R"(^[A-Za-z_]\w*)", .order = .8, .natural = false)
 KINDDECLARE(LITERALNUM, R"((0[xbo]\d+)|(\.\d+f?)|(\d+\.\d+f?)|(\d+f?))", .natural = false)
 KINDDECLARE(LITERALSTR, R"("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|""".*""")", .action = Action::CONSUME | Action::MULTILINE, .natural = false)
@@ -108,11 +119,11 @@ KINDDECLARE(PARENL, R"(\()")
 KINDDECLARE(PARENR, R"(\))")
 KINDDECLARE(SEMICOLON, R"(;)")
 KINDDECLARE(SLASH, R"(\\)")
+KINDDECLARE(UEOF, R"()", .action = Action::UEOF)
 KINDDECLARE(UNKNOWN, R"(\S*)", .action = Action::UNKNOWN, .order = .9)
 KINDDECLARE(WHITESPACE, R"([ \t\v]+)", .action = Action::IGNORE, .order = .0)
 
 namespace alexi::kinds {
-    Kind KEYWORD(const Str[]);
     Kind KEYWORD(const Vec<Str>);
 }
 

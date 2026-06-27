@@ -7,7 +7,16 @@
 #include "alexi/location.hpp"
 #include "alexi/kind.hpp"
 
+namespace alexi::token {
+    struct Token;
+    using Self = Token;
+}
+
 namespace alexi {
+    using alexi::token::Token;
+}
+
+namespace alexi::token {
     ALEXI_STRUCT(Token) {
         const std::shared_ptr<Kind> kind;
         const Str                   view;
@@ -17,11 +26,11 @@ namespace alexi {
 
         Action get_action(void) const;
         Len size(void) const;
-        bool operator==(const Kind &) const;
-        bool operator==(const char *) const;
-        bool operator==(const Str &) const;
-        bool operator==(const StrV &) const;
+        bool operator==(const Kind&) const;
+        bool operator==(const char*) const;
+        bool operator==(const Str&) const;
+        bool operator==(const StrV&) const;
     };
 
-    std::ostream &operator<<(std::ostream &, const Token &);
+    std::ostream &operator<<(std::ostream&, const Self&);
 }

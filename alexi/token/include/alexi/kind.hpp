@@ -5,7 +5,16 @@
 #include "alexi/aliases.hpp"
 #include "alexi/action.hpp"
 
+namespace alexi::kind {
+    struct Kind;
+    using Self = Kind;
+}
+
 namespace alexi {
+    using alexi::kind::Kind;
+}
+
+namespace alexi::kind {
     // A definition of a token type. The
     // `alexi::token::Kind` allows alexi to dynamically
     // declare individual tokens that can be parsed by
@@ -44,7 +53,7 @@ namespace alexi {
         bool operator>(const Self &) const;
     };
 
-    std::ostream &operator<<(std::ostream &, const Kind &);
+    std::ostream &operator<<(std::ostream &, const Self &);
 }
 
 namespace std {

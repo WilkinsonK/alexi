@@ -3,42 +3,20 @@
 #include <regex>
 
 #include "alexi/aliases.hpp"
-#include "alexi/kinds.hpp"
+#include "alexi/kind.hpp"
 #include "alexi/token.hpp"
 
+namespace alexi::matcher {
+    struct Matcher;
+    using Self = Matcher;
+}
+
 namespace alexi {
+    using alexi::matcher::Matcher;
+}
+
+namespace alexi::matcher {
     using namespace std::regex_constants;
-
-    template <typename M>
-    ALEXI_STRUCT(Match, M) {
-        M               matches;
-        match_flag_type flags = match_continuous;
-
-        Match(const StrV &, const std::regex &);
-        Len length(Ord = 0) const;
-        Len size(void) const;
-        Str operator[](Ord);
-    };
-
-    template <typename M>
-    Match<M>::Match(const StrV &view, const std::regex &pattern) {
-        std::regex_search(view.data(), view.data() + view.size(), matches, pattern, flags);
-    }
-
-    template <typename M>
-    Len Match<M>::length(Ord index) const {
-        return matches.length(index);
-    }
-
-    template <typename M>
-    Len Match<M>::size(void) const {
-        return matches.size();
-    }
-
-    template <typename M>
-    Str Match<M>::operator[](Ord index) {
-        return matches[index];
-    }
 
     ALEXI_STRUCT(Matcher) {
         public:
@@ -52,20 +30,5 @@ namespace alexi {
         static Matcher from(std::shared_ptr<Kind>);
         Opt<Token> match(const Str &, const Mark = {});
         Opt<Token> match(const StrV &, const Mark = {});
-    };
-
-
-    ALEXI_STRUCT(Matchers) {
-        using Inner     = Vec<std::shared_ptr<Matcher>>;
-        using Iter      = Inner::iterator;
-        using ConstIter = Inner::const_iterator;
-
-        Inner inner;
-
-        Matchers(const Kinds &);
-        Iter begin(void);
-        ConstIter begin(void) const;
-        Iter end(void);
-        ConstIter end(void) const;
     };
 }

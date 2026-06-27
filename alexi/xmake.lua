@@ -5,7 +5,7 @@ function declare_component(name, ...)
         set_kind("static")
         add_deps(...)
         add_includedirs(name .. "/include", {public = true})
-        add_files(name .. "/*.cpp")
+        add_files(name .. "/src/*.cpp")
 
         return "alexi_" .. name
 end

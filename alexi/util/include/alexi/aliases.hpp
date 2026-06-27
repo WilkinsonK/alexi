@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <optional>
@@ -10,6 +11,7 @@
 #define ALEXI_STRUCT(NAME, ...) struct NAME : public AlexiObject<NAME __VA_OPT__(<__VA_ARGS__>)>
 
 namespace alexi {
+    using File           = std::fstream;
     using Len            = std::size_t;
     using LineNo         = std::size_t;
     using Ord            = double;
