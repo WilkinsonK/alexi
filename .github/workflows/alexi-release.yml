@@ -1,4 +1,4 @@
-name: Cross-Compile Release
+name: Alexi Release
 
 on:
   push:
