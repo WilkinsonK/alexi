@@ -1,6 +1,7 @@
 name: Alexi Release
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*.*.*'
@@ -21,14 +22,14 @@ jobs:
         run: mkdir -p release_packages
       - name: Build & Package Linux AArch64
         run: |
-          xmake f -p linux -a arm64 --toolchain=zig -m release
+          xmake f -p linux -a arm64 --toolchain=@zig -m release
           xmake
           xmake install -o staging_linux_arm64
           tar -czvf release_packages/alexi-linux-arm64.tar.gz -C staging_linux_arm64 .
           xmake c -c
       - name: Build & Package Windows x86_64
         run: |
-          xmake f -p windows -a x64 --toolchain=mingw -m release
+          xmake f -p windows -a x64 --toolchain=@mingw -m release
           xmake
           xmake install -o staging_windows_x64
           # Zip the Windows artifacts (.dll, .lib, and headers)
