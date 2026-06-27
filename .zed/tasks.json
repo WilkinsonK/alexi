@@ -7,8 +7,18 @@
   },
   {
     "label": "test",
-    "command": "xmake test",
+    "command": "xmake f -m debug && xmake test -j8",
     "use_new_terminal": false,
     "allow_concurrent_runs": false
+  },
+  {
+    "label": "build-basic_parsing",
+    "command": "xmake f -m debug && xmake b -j8 basic_parsing",
+    "reveal": "always"
+  },
+  {
+    "label": "build-basic_usage",
+    "command": "xmake f -m debug && xmake b -j8 basic_usage",
+    "reveal": "always"
   }
 ]
