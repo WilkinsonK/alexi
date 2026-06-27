@@ -39,7 +39,7 @@ namespace alexi::kind {
         // For example, '{' as a 'BRACE_LEFT' token kind
         // could be considered natural as the brace itself
         // has 0 variations.
-        const bool natural = false;
+        const bool natural = true;
         // A secondary validation which allows some `Kind`
         // to only be viable if a match also meets the
         // predicate.
@@ -47,6 +47,7 @@ namespace alexi::kind {
 
         // Return a `shared_ptr` to the `Kind`.
         std::shared_ptr<Self> to_shared(void) const;
+        Self validate(void) const;
 
         bool operator==(const Self &) const;
         bool operator<(const Self &) const;
