@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_release:
-    name: Build Cross-Compiled Releases
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,28 +18,36 @@ jobs:
         with:
           xmake-version: latest
 
-      # --- Target 1: Linux AArch64 (Using Zig) ---
-      - name: Build Linux AArch64
+      - name: Prepare Artifacts Directory
+        run: mkdir -p release_packages
+
+      - name: Build & Package Linux AArch64
         run: |
           xmake f -p linux -a arm64 --toolchain=zig -m release
           xmake
-          mkdir -p build_artifacts
-          cp build/linux/arm64/release/your_binary build_artifacts/your_binary_linux_aarch64
+
+          # Use Xmake's install command to safely export artifacts to a staging area
+          xmake install -o staging_linux_arm64
+
+          # Compress headers and the built .so file
+          tar -czvf release_packages/alexi-linux-arm64.tar.gz -C staging_linux_arm64 .
           xmake c -c
 
-      # --- Target 2: Windows x86_64 (Using Mingw-w64) ---
-      - name: Build Windows x86_64
+      - name: Build & Package Windows x86_64
         run: |
           xmake f -p windows -a x64 --toolchain=mingw -m release
           xmake
-          cp build/windows/x64/release/your_binary.exe build_artifacts/your_binary_win64.exe
+
+          xmake install -o staging_windows_x64
+
+          # Zip the Windows artifacts (.dll, .lib, and headers)
+          cd staging_windows_x64 && zip -r ../release_packages/alexi-windows-x64.zip . && cd ..
           xmake c -c
 
-      # --- Create Release & Upload Artifacts ---
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: build_artifacts/*
+          files: release_packages/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
