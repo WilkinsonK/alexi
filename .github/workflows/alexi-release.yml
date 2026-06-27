@@ -7,43 +7,33 @@ on:
 
 jobs:
   build_release:
-    name: Build
+    name: Build Win and Unix
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Setup Xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
           xmake-version: latest
-
+          build-cache: true
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
-
       - name: Build & Package Linux AArch64
         run: |
           xmake f -p linux -a arm64 --toolchain=zig -m release
           xmake
-
-          # Use Xmake's install command to safely export artifacts to a staging area
           xmake install -o staging_linux_arm64
-
-          # Compress headers and the built .so file
           tar -czvf release_packages/alexi-linux-arm64.tar.gz -C staging_linux_arm64 .
           xmake c -c
-
       - name: Build & Package Windows x86_64
         run: |
           xmake f -p windows -a x64 --toolchain=mingw -m release
           xmake
-
           xmake install -o staging_windows_x64
-
           # Zip the Windows artifacts (.dll, .lib, and headers)
           cd staging_windows_x64 && zip -r ../release_packages/alexi-windows-x64.zip . && cd ..
           xmake c -c
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
@@ -58,22 +48,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Setup Xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
           xmake-version: latest
-
+          build-cache: true
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
-
       - name: Build & Package macOS Universal
         run: |
           xmake f -p macosx -a "x86_64,arm64" -m release
           xmake
           xmake install -o staging_macos
           tar -czvf release_packages/alexi-macos-universal.tar.gz -C staging_macos .
-
       - name: Upload to GitHub Release (macOS)
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
