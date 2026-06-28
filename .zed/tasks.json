@@ -20,5 +20,17 @@
     "label": "build-basic_usage",
     "command": "xmake f -m debug --examples=y && xmake b -j8 basic_usage",
     "reveal": "always"
+  },
+  {
+    "label": "GitHub Actions: Run All Local Workflows",
+    "command": "act",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false
+  },
+  {
+    "label": "GitHub Actions: Run Specific Job",
+    "command": "act -j ",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false
   }
 ]
