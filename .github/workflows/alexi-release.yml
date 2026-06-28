@@ -24,11 +24,7 @@ jobs:
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package Linux AArch64
-        run: |
-          xmake f -p linux -a arm64 --toolchain=@zig -m release
-          xmake
-          xmake install -o staging_linux_arm64
-          tar -czvf release_packages/alexi-linux-arm64.tar.gz -C staging_linux_arm64 .
+        run: PLATFORM="linux" ARCH="arm64" TOOLCHAIN="@zig" scripts/cibuild.sh
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -51,11 +47,7 @@ jobs:
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package macOS Universal
-        run: |
-          xmake f -p macosx -a "x86_64,arm64" -m release
-          xmake
-          xmake install -o staging_macos
-          tar -czvf release_packages/alexi-macos-universal.tar.gz -C staging_macos .
+        run: PLATFORM="macosx" ARCH="x86_64,arm64" scripts/cibuild.sh
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -76,19 +68,11 @@ jobs:
           xmake-version: latest
           build-cache: true
       - name: Install LLVM-MinGW Toolchain
-        run: |
-          curl -L -o llvm-mingw.tar.xz https://github.com/mstorsjo/llvm-mingw/releases/download/20260616/llvm-mingw-20260616-ucrt-ubuntu-22.04-x86_64.tar.xz
-          mkdir -p opt/llvm-mingw
-          tar -xf llvm-mingw.tar.xz -C opt/llvm-mingw --strip-components=1
-          echo "$GITHUB_WORKSPACE/opt/llvm-mingw/bin" >> $GITHUB_PATH
+        run: scripts/ciwinstall.sh >> $GITHUB_PATH
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package Windows x86_64
-        run: |
-          xmake f -p windows -a x64 --toolchain=mingw --sdk=$GITHUB_WORKSPACE/opt/llvm-mingw -m release
-          xmake
-          xmake install -o staging_windows_x64
-          cd staging_windows_x64 && zip -r ../release_packages/my_shared_lib-windows-x64.zip . && cd ..
+        run: PLATFORM="windows" ARCH="x64" TOOLCHAIN="mingw" scripts/cibuild.sh
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
