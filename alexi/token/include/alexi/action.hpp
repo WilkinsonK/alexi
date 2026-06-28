@@ -44,8 +44,8 @@ namespace alexi {
 }
 
 namespace std {
+    using namespace alexi;
     using namespace alexi::action;
-    using namespace alexi::format;
 
     template <>
     struct std::formatter<Action> {
