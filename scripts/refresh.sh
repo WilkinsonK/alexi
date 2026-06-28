@@ -4,4 +4,4 @@
 set -eu -o pipefail
 
 rm -rf ./build
-xmake clean --all && rm ./compile_commands.json && xmake
+xmake clean --all && xmake f --examples=y --testing=y -y -m debug && rm ./compile_commands.json && xmake

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Creates a new submodule for Alexi. This includes creating
+# the subdirectories and initializing an empty source file.
 
 set -eu -o pipefail
 
@@ -9,5 +11,5 @@ fi
 
 MODNAME=$1
 MODROOT="alexi/${MODNAME}"
-mkdir -p ${MODROOT}/include/alexi
-touch ${MODROOT}/${MODNAME}.cpp
+mkdir -p ${MODROOT}/include/alexi ${MODROOT}/src
+touch ${MODROOT}/src/${MODNAME}.cpp
