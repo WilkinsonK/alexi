@@ -12,17 +12,11 @@ else
     INSTALL_NAME=staging_${PLATFORM}_${ARCH}
 fi
 
-if [[ $PLATFORM = "windows" ]]; then
-    ARCHIVE_COMMAND="cd ${INSTALL_NAME} && zip -r ../release_packages/${ARCHIVE_NAME}.zip . && cd .."
-else
-    ARCHIVE_COMMAND="tar -czvf release_packages/${ARCHIVE_NAME}.tar.gz -C ${INSTALL_NAME} ."
-fi
-
 if [[ $PLATFORM = "linux" ]]; then
     xmake f -m release -p ${PLATFORM} -a ${ARCH} --toolchain=${TOOLCHAIN}
 fi
 
-if [[ $PLATFORM = "macox" ]]; then
+if [[ $PLATFORM = "macosx" ]]; then
     xmake f -m release -p ${PLATFORM} -a ${ARCH}
 fi
 
@@ -32,4 +26,9 @@ fi
 
 xmake
 xmake install -o ${INSTALL_NAME}
-$ARCHIVE_COMMAND
+
+if [[ $PLATFORM = "windows" ]]; then
+    cd ${INSTALL_NAME} && zip -r ../release_packages/${ARCHIVE_NAME}.zip . && cd ..
+else
+    tar -czvf release_packages/${ARCHIVE_NAME}.tar.gz -C ${INSTALL_NAME} .
+fi

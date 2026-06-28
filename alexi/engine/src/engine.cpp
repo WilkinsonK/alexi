@@ -28,11 +28,9 @@ namespace alexi::engine {
     inline constexpr File open(const Path &path) {
         File fd(path);
         if (fd) return fd;
-        throw std::runtime_error(std::format(
-            R"("{}": {})",
-            path.c_str(),
-            std::strerror(errno)
-        ));
+        auto src = std::string(path);
+        auto err = std::string(std::strerror(errno));
+        throw std::runtime_error(std::format(R"("{}": {})", src, err));
     }
 
     Self::Engine(void) {}
