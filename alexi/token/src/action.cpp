@@ -17,6 +17,7 @@ namespace alexi::action {
         return lhs | rhs;
     }
 
+
     inline constexpr void ostream_helper(std::ostream &os, const Self &self) {
         #define __strcase(T) case Self::T: os << "["#T"]"; break
         switch (self) {
