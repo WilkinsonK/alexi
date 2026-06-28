@@ -1,6 +1,10 @@
 #pragma once
 
+#include <format>
 #include <iostream>
+#include <sstream>
+
+#include "alexi/formatting.hpp"
 
 namespace alexi::action {
     using Flag = unsigned long;
@@ -37,4 +41,21 @@ namespace alexi::action {
 
 namespace alexi {
     using alexi::action::Action;
+}
+
+namespace std {
+    using namespace alexi::action;
+    using namespace alexi::format;
+
+    template <>
+    struct std::formatter<Action> {
+        ALEXI_PARSE("Action")
+
+        template <typename FormatContext>
+        auto format(const Action& t, FormatContext& ctx) const {
+            std::stringstream ss;
+            ss << t;
+            return std::format_to(ctx.out(), "{}", ss.str());
+        }
+    };
 }

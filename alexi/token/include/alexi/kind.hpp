@@ -4,6 +4,7 @@
 
 #include "alexi/aliases.hpp"
 #include "alexi/action.hpp"
+#include "alexi/formatting.hpp"
 
 namespace alexi::kind {
     struct Kind;
@@ -55,6 +56,19 @@ namespace alexi::kind {
     };
 
     std::ostream &operator<<(std::ostream &, const Self &);
+}
+
+namespace std {
+    using namespace alexi::kind;
+    using namespace alexi::format;
+    ALEXI_FORMATTER(
+        Kind,
+        "<Kind[pattern=\"{}\", name=\"{}\", action={}, order={}]>",
+        t.pattern,
+        t.name,
+        t.action,
+        t.order
+    );
 }
 
 namespace std {
