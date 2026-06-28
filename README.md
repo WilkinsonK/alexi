@@ -92,9 +92,45 @@ syntaxes for arithmetic operations, unnatural identifiers, strings and many
 more.
 
 ### Matcher
-### Lexer
+The `Matcher` type enforces the primary purpose of a `Kind`. When consumed by
+a `Matcher`, the contained `Kind::pattern` is compiled into a proper *Regular 
+Expression*. This will then be used to match against a buffer to try and
+create tokens.
+
+```cpp
+#include "alexi/kind.hpp"
+#include "alexi/matcher.hpp"
+
+using namespace alexi;
+
+static const Kind my_kind{
+    .pattern = R"(\w+)",
+    .name    = "WORD",
+    // .action    = Action::CONSUME,
+    // .order     = 0.1,
+    // .natural   = false,
+    // .predicate = [](auto _){ return true; }
+};
+static const Matcher my_matcher(my_kind);
+
+int main(int argc, const char *const *argv) {
+    // Should produce a std::optional<Token>;
+    auto token = my_matcher.match("Mary had a little lamb.");
+    return 0;
+}
+```
+
+### [Lexer][4]
+The main driver of lexical analysis. Reads through a data stream attempting to
+match against its configured token matchers.
+
+|**Method Name**|**Variations**|**Return Type**|
+|-|-|-|
+|**next_token**|1|`Token`|
+
 ### Token
 
 [1]: alexi/engine/README.md
 [2]: alexi/token/include/alexi/kinds.hpp
 [3]: alexi/token/include/alexi/kind.hpp
+[4]: alexi/lexer/README.md
