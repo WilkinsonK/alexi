@@ -5,11 +5,6 @@
 namespace alexi::action {
     using Flag = unsigned long;
 
-    #if defined(_WIN32)
-    const Flag Flag_Max = 1 << (sizeof(Flag)-1);
-    #else
-    const Flag Flag_Max = 1 << sizeof(Flag);
-    #endif
     // Determines token handling behavior if/when a lexer
     // is able to match some token.
     enum class Action : Flag {
@@ -29,7 +24,7 @@ namespace alexi::action {
         // analysis or panic.
         UEOF = 1 << 4,
         // Panic as the token is not known to the lexer.
-        UNKNOWN = Flag_Max
+        UNKNOWN = 1 << 5
     };
 
     using Self = Action;
