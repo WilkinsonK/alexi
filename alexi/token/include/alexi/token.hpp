@@ -39,8 +39,6 @@ namespace alexi::token {
 
 namespace std {
     using namespace alexi::token;
-    using namespace alexi::format;
-
     ALEXI_FORMATTER(
         Token,
         "<Token[{}] {}{}>",
