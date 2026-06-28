@@ -110,3 +110,27 @@ TEST_CASE("Token kinds can be dropped using ()", "[kinds]") {
     REQUIRE(kinds("NOTHING")->name == "NOTHING");
     REQUIRE(kinds["NOTHING"] == nullptr);
 }
+
+TEST_CASE("Token kinds must have an identifier", "[kinds]") {
+    Kinds kinds;
+    REQUIRE_THROWS(kinds |= { .pattern = R"(\w)", .name = "" });
+}
+
+TEST_CASE("Token kinds must have a valid pattern", "[kinds]") {
+    Kinds kinds;
+    REQUIRE_THROWS(kinds |= { .pattern = R"()", .name = "FAULTY" });
+    REQUIRE_THROWS(kinds |= { .pattern = R"(.*)", .name = "FAULTY" });
+}
+
+TEST_CASE("Token kinds must have a valid action", "[kinds]") {
+    Kinds kinds;
+    REQUIRE_THROWS(kinds |= { .pattern = R"(\w)", .name = "FAULTY", .action = Action::NOTHING });
+    REQUIRE_THROWS(kinds |= { .pattern = R"(\w)", .name = "FAULTY", .action = Action::IGNORE | Action::CONSUME });
+    REQUIRE_THROWS(kinds |= { .pattern = R"(\w)", .name = "FAULTY", .action = Action::CONSUME | Action::IGNORE });
+}
+
+TEST_CASE("Token kinds must have an order within the bounds of 0 and 1", "[kinds]") {
+    Kinds kinds;
+    REQUIRE_THROWS(kinds |= { .pattern = R"(\w)", .name = "", .order = 1.2 });
+    REQUIRE_THROWS(kinds |= { .pattern = R"(\w)", .name = "", .order = 1.0 });
+}
