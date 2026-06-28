@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "alexi/aliases.hpp"
+#include "alexi/formatting.hpp"
 #include "alexi/location.hpp"
 #include "alexi/kind.hpp"
 
@@ -33,4 +34,17 @@ namespace alexi::token {
     };
 
     std::ostream &operator<<(std::ostream&, const Self&);
+}
+
+namespace std {
+    using namespace alexi::token;
+    using namespace alexi::format;
+
+    ALEXI_FORMATTER(
+        Token,
+        "<Token[{}] {}{}>",
+        t.kind->name,
+        t.mark,
+        !t.kind->natural ? std::format(" {}", t.view) : ""
+    );
 }
