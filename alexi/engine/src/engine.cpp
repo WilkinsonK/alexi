@@ -59,28 +59,28 @@ namespace alexi::engine {
         };
     }
 
-    Self &Self::use_keywords(const Str &kwd) {
+    Self Self::use_keywords(const Str &kwd) {
         return use_keywords(Vec({kwd}));
     }
 
-    Self &Self::use_keywords(const Vec<Str> &kwds) {
+    Self Self::use_keywords(const Vec<Str> &kwds) {
         return use_keywords(kwds.begin(), kwds.end());;
     }
 
-    Self &Self::use_keywords(const Vec<Str>::const_iterator &first, const Vec<Str>::const_iterator &last) {
+    Self Self::use_keywords(const Vec<Str>::const_iterator &first, const Vec<Str>::const_iterator &last) {
         keywords.insert(keywords.begin(), first, last);
         return *this;
     }
 
-    Self &Self::use_kinds(const Kind &kind) {
+    Self Self::use_kinds(const Kind &kind) {
         return use_kinds(Vec({kind}));
     }
 
-    Self &Self::use_kinds(const Vec<Kind> &kinds) {
+    Self Self::use_kinds(const Vec<Kind> &kinds) {
         return use_kinds(kinds.begin(), kinds.end());
     }
 
-    Self &Self::use_kinds(const Vec<Kind>::const_iterator &first, const Vec<Kind>::const_iterator &last) {
+    Self Self::use_kinds(const Vec<Kind>::const_iterator &first, const Vec<Kind>::const_iterator &last) {
         std::for_each(first, last, [&](const auto &kind) {
             kinds.add(kind);
         });

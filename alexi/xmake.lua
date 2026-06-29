@@ -19,7 +19,7 @@ components = {
 }
 
 target("alexi")
-    set_version("3.1.1")
+    set_version("3.1.0")
     set_kind("shared")
     add_includedirs("include", {public = true})
     add_deps(table.unpack(components))
