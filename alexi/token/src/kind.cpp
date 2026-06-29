@@ -1,5 +1,6 @@
 #include <format>
 
+#include "alexi/exceptions.hpp"
 #include "alexi/kind.hpp"
 
 namespace alexi::kind {
@@ -9,17 +10,17 @@ namespace alexi::kind {
 
     const Self &Self::validate(void) const {
         if (name.size() < 1)
-            throw "Kind defined with no identifier";
+            throw InvalidKind("defined with no identifier");
         if (pattern.size() < 1)
-            throw std::format("Kind {} defined with no pattern", name);
+            throw InvalidKind("{} defined with no pattern", name);
         if (pattern == R"(.*)")
-            throw std::format("Kind {} defined invalid pattern '{}'", name, pattern);
+            throw InvalidKind("{} defined invalid pattern '{}'", name, pattern);
         if (action == Action::NOTHING)
-            throw std::format("Kind {} defined with no action", name);
+            throw InvalidKind("{} defined with no action", name);
         if ((action & Action::CONSUME) != Action::NOTHING && (action & Action::IGNORE) != Action::NOTHING)
-            throw std::format("Kind {} defined both to CONSUME and IGNORE its tokens", name);
+            throw InvalidKind("{} defined both to CONSUME and IGNORE its tokens", name);
         if (order < 0 || order >= 1)
-            throw std::format("Kind {} defined with an out-of-bounds order {}", name, order);
+            throw InvalidKind("{} defined with an out-of-bounds order {}", name, order);
         return *this;
     }
 
