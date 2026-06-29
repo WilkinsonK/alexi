@@ -179,8 +179,7 @@ const Token Parser::expect(const std::initializer_list<Kind> kinds) {
     std::for_each(kinds.begin(), kinds.end(), [&names](const auto &k) {
         names.push_back(k.name);
     });
-    auto join = names | std::views::join_with(StrV(" or "));
-    throw std::runtime_error(std::format("{} Expected {} but got {}", t.mark, Str(join.begin(), join.end()), t.kind->name));
+    throw UnexpectedKind(t.mark, t.kind->name, names);
 }
 
 struct Alexi {
