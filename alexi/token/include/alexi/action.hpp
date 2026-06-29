@@ -48,14 +48,14 @@ namespace std {
     using namespace alexi::action;
 
     template <>
-    struct formatter<Action> {
+    struct std::formatter<Action> {
         ALEXI_PARSE("Action")
 
         template <typename FormatContext>
         auto format(const Action& t, FormatContext& ctx) const {
-            stringstream ss;
+            std::stringstream ss;
             ss << t;
-            return format_to(ctx.out(), "{}", ss.str());
+            return std::format_to(ctx.out(), "{}", ss.str());
         }
     };
 }
