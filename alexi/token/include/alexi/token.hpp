@@ -1,6 +1,7 @@
 #pragma once
 
 #include <format>
+#include <initializer_list>
 #include <iostream>
 #include <memory>
 
@@ -28,6 +29,8 @@ namespace alexi::token {
 
         Action get_action(void) const;
         Len size(void) const;
+        bool operator==(const std::initializer_list<Kind>) const;
+        bool operator==(const Vec<Kind>) const;
         bool operator==(const Kind&) const;
         bool operator==(const char*) const;
         bool operator==(const Str&) const;

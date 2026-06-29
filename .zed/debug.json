@@ -4,13 +4,20 @@
     "request": "launch",
     "label": "Debug basic_parsing",
     "program": "build/macosx/arm64/debug/basic_parsing",
-    "build": "build-basic_parsing"
+    "build": "build:basic_parsing"
   },
   {
     "adapter": "CodeLLDB",
     "request": "launch",
     "label": "Debug basic_usage",
     "program": "build/macosx/arm64/debug/basic_usage",
-    "build": "build-basic_usage"
-  }
+    "build": "build:basic_usage"
+  },
+  {
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "label": "Debug json_parsing",
+    "program": "build/macosx/arm64/debug/json_parsing",
+    "build": "build:json_parsing"
+  },
 ]

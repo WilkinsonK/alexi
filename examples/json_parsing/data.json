@@ -1,0 +1,32 @@
+{
+  "name": "John Doe",
+  "age": 30,
+  "email": "john.doe@example.com",
+  "active": true,
+  "address": {
+    "street": "123 Main St",
+    "city": "Springfield",
+    "state": "IL",
+    "zipcode": "62701"
+  },
+  "tags": [
+    "developer",
+    "c++",
+    "parser"
+  ],
+  "scores": [
+    95.5,
+    87.3,
+    92.1
+  ],
+  "metadata": {
+    "created": "2024-01-15",
+    "updated": "2024-06-28",
+    "version": 1.0,
+    "nested": {
+      "level": 3,
+      "active": false,
+      "items": []
+    }
+  }
+}
