@@ -97,7 +97,7 @@ struct Parser {
     const Node parse(void);
 };
 
-Parser::Parser(const Lexer &lexer) : lexer(lexer), tokens{} {}
+Parser::Parser(const Lexer &lexer) : lexer(lexer) {}
 
 const Token Parser::eat(void) {
     return lexer.next_token();
