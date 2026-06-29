@@ -101,7 +101,7 @@ std::ostream &operator<<(std::ostream &os, const Statement::Inner &stmt) {
 
 std::ostream &operator<<(std::ostream &os, const Vec<Statement> &stmt) {
     for (auto it = stmt.begin(); it != stmt.end(); it++) {
-        os << *stmt.begin();
+        os << *it;
         if (it+1 != stmt.end()) os << ", ";
     }
     return os;
