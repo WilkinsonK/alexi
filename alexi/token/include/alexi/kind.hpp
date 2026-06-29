@@ -1,6 +1,5 @@
 #pragma once
 
-#include <format>
 #include <functional>
 
 #include "alexi/aliases.hpp"
