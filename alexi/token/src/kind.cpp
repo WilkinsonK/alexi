@@ -18,7 +18,7 @@ namespace alexi::kind {
             throw std::format("Kind {} defined with no action", name);
         if ((action & Action::CONSUME) != Action::NOTHING && (action & Action::IGNORE) != Action::NOTHING)
             throw std::format("Kind {} defined both to CONSUME and IGNORE its tokens", name);
-        if (order < 0 || order >= 1)
+        if (order < 0 || order > 1)
             throw std::format("Kind {} defined with an out-of-bounds order {}", name, order);
         return *this;
     }
