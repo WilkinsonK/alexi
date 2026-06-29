@@ -1,4 +1,6 @@
+#include <algorithm>
 #include <format>
+#include <initializer_list>
 
 #include "alexi/kinds.hpp"
 #include "alexi/token.hpp"
@@ -18,6 +20,17 @@ namespace alexi::token {
 
     Len Self::size(void) const {
         return view.size();
+    }
+
+
+    bool Self::operator==(const std::initializer_list<Kind> others) const {
+        return *this == Vec<Kind>(others);
+    }
+
+    bool Self::operator==(const Vec<Kind> others) const {
+        return std::find_if(others.begin(), others.end(), [&](const auto &k){
+            return *this == k;
+        }) != others.end();
     }
 
     bool Self::operator==(const Kind &other) const {

@@ -12,13 +12,18 @@
     "allow_concurrent_runs": false
   },
   {
-    "label": "build-basic_parsing",
+    "label": "build:basic_parsing",
     "command": "xmake f -m debug --examples=y && xmake b -j8 basic_parsing",
     "reveal": "always"
   },
   {
-    "label": "build-basic_usage",
+    "label": "build:basic_usage",
     "command": "xmake f -m debug --examples=y && xmake b -j8 basic_usage",
+    "reveal": "always"
+  },
+  {
+    "label": "build:json_parsing",
+    "command": "xmake f -m debug --examples=y && xmake b -j8 json_parsing",
     "reveal": "always"
   },
   {
