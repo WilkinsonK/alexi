@@ -1,18 +1,26 @@
 #pragma once
 
 #include <concepts>
+#include <format>
 #include <exception>
 
 #include "alexi/aliases.hpp"
 #include "alexi/location.hpp"
 
 namespace alexi {
-    template <Location L = Mark>
-    struct Exception : public std::exception {
+    struct AlexiException : public std::exception {
         Str message;
 
-        Exception(const L loc, const Str message) :
-            message(std::format("{} {}", loc, message))
+        AlexiException(void) :
+            AlexiException("unspecified exception")
+            {}
+        template <typename ...Arg>
+        AlexiException(std::format_string<Arg...> message, Arg&& ...args) :
+            message(std::format(message, std::forward<Arg>(args)...))
+            {}
+        template <std::convertible_to<Str> R>
+        AlexiException(R message) :
+            message(message)
             {}
 
         const char *what(void) const noexcept override {
@@ -20,31 +28,42 @@ namespace alexi {
         }
     };
 
+    struct InvalidKind : public AlexiException {
+        using AlexiException::AlexiException;
+    };
+
+    template <Location L = Mark>
+    struct LexerException : public AlexiException {
+        LexerException(const L loc, const Str message) :
+            AlexiException(std::format("{} {}", loc, message))
+            {}
+    };
+
     template <Location L, std::convertible_to<Str> R>
-    struct Unreachable : public Exception<L> {
+    struct Unreachable : public LexerException<L> {
         Unreachable(const L loc, const R &reason) :
-            Exception<L>(loc, std::format("unreachable branch: {}", reason))
+            LexerException<L>(loc, std::format("unreachable branch: {}", reason))
             {}
     };
 
     template <Location L, std::convertible_to<Str> V>
-    struct Unmatched : public Exception<L> {
+    struct Unmatched : public LexerException<L> {
         Unmatched(const L loc, const V view) :
-            Exception<L>(loc, std::format("no token type matched \"{}\"", view))
+            LexerException<L>(loc, std::format("no token type matched \"{}\"", view))
             {}
     };
 
     template <Location L, std::convertible_to<Str> V>
-    struct UnknownToken : public Exception<L> {
+    struct UnknownToken : public LexerException<L> {
         UnknownToken(const L loc, const V view) :
-            Exception<L>(loc, std::format("unknown token \"{}\"", view))
+            LexerException<L>(loc, std::format("unknown token \"{}\"", view))
             {}
     };
 
     template <Location L>
-    struct UnexpectedEOF : public Exception<L> {
+    struct UnexpectedEOF : public LexerException<L> {
         UnexpectedEOF(const L loc) :
-            Exception<L>(loc, "unexpected EOF")
+            LexerException<L>(loc, "unexpected EOF")
             {}
     };
 }
