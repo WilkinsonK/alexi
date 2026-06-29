@@ -3,11 +3,18 @@
 #include <concepts>
 #include <format>
 #include <exception>
+#include <initializer_list>
+#include <ranges>
 
 #include "alexi/aliases.hpp"
 #include "alexi/location.hpp"
 
-namespace alexi {
+namespace alexi::exceptions {
+    constexpr auto join_with(const Vec<Str> items, const StrV delim) {
+        auto join = items | std::views::join_with(delim);
+        return Str(join.begin(), join.end());
+    }
+
     struct AlexiException : public std::exception {
         Str message;
 
@@ -35,35 +42,60 @@ namespace alexi {
     template <Location L = Mark>
     struct LexerException : public AlexiException {
         LexerException(const L loc, const Str message) :
-            AlexiException(std::format("{} {}", loc, message))
+            AlexiException("{} {}", loc, message)
             {}
-    };
-
-    template <Location L, std::convertible_to<Str> R>
-    struct Unreachable : public LexerException<L> {
-        Unreachable(const L loc, const R &reason) :
-            LexerException<L>(loc, std::format("unreachable branch: {}", reason))
+        template <typename ...Arg>
+        LexerException(const L loc, std::format_string<Arg...> message, Arg&& ...args) :
+            AlexiException("{} {}", loc, std::format(message, std::forward<Arg>(args)...))
             {}
     };
 
     template <Location L, std::convertible_to<Str> V>
     struct Unmatched : public LexerException<L> {
         Unmatched(const L loc, const V view) :
-            LexerException<L>(loc, std::format("no token type matched \"{}\"", view))
+            LexerException<L>(loc, "no token type matched \"{}\"", view)
             {}
     };
 
-    template <Location L, std::convertible_to<Str> V>
-    struct UnknownToken : public LexerException<L> {
-        UnknownToken(const L loc, const V view) :
-            LexerException<L>(loc, std::format("unknown token \"{}\"", view))
+    template <Location L, std::convertible_to<Str> R>
+    struct Unreachable : public LexerException<L> {
+        Unreachable(const L loc, const R &reason) :
+            LexerException<L>(loc, reason)
+            {}
+    };
+
+    template <Location L>
+    struct UnexpectedKind : public LexerException<L> {
+        UnexpectedKind(const L loc, const Str got, Vec<Str> expected) :
+            LexerException<L>(loc, "expected {} but got {}", join_with(expected, " or "), got)
+            {}
+        UnexpectedKind(const L loc, const Str got, std::initializer_list<Str> expected) :
+            LexerException<L>(loc, "expected {} but got {}", join_with(expected, " or "), got)
             {}
     };
 
     template <Location L>
     struct UnexpectedEOF : public LexerException<L> {
         UnexpectedEOF(const L loc) :
-            LexerException<L>(loc, "unexpected EOF")
+            LexerException<L>(loc, "")
             {}
     };
+
+    template <Location L, std::convertible_to<Str> V>
+    struct UnknownToken : public LexerException<L> {
+        UnknownToken(const L loc, const V view) :
+            LexerException<L>(loc, "\"{}\"", view)
+            {}
+    };
+}
+
+namespace alexi {
+    using alexi::exceptions::AlexiException;
+    using alexi::exceptions::InvalidKind;
+    using alexi::exceptions::LexerException;
+    using alexi::exceptions::Unreachable;
+    using alexi::exceptions::Unmatched;
+    using alexi::exceptions::UnexpectedKind;
+    using alexi::exceptions::UnexpectedEOF;
+    using alexi::exceptions::UnknownToken;
 }

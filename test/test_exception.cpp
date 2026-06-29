@@ -33,6 +33,10 @@ TEST_CASE("Exception message includes location info", "[exception]") {
     REQUIRE(message.find("test.txt") != std::string::npos);
     REQUIRE(message.find("5") != std::string::npos);  // Line ID
     REQUIRE(message.find("Test error message") != std::string::npos);
+    // Format: "[file@line:col] message"
+    REQUIRE(message.find("[") != std::string::npos);
+    REQUIRE(message.find("@") != std::string::npos);
+    REQUIRE(message.find(":") != std::string::npos);
 }
 
 TEST_CASE("Exception message format includes Mark format", "[exception]") {
@@ -102,7 +106,7 @@ TEST_CASE("Unmatched exception message contains no token type matched", "[except
     Unmatched<Mark, Str> ex(mark, "}");
     std::string message = ex.what();
 
-    // Should contain the message template from exceptions.hpp line 33
+    // Message format: "location no token type matched \"token\""
     REQUIRE(message.find("no token type matched") != std::string::npos);
     REQUIRE(message.find("}") != std::string::npos);
 }
@@ -146,7 +150,7 @@ TEST_CASE("UnknownToken exception message contains location", "[exception][unkno
     REQUIRE(message.find("5") != std::string::npos);
 }
 
-TEST_CASE("UnknownToken exception message contains unknown token phrase", "[exception][unknown]") {
+TEST_CASE("UnknownToken exception message contains token value", "[exception][unknown]") {
     Mark mark{
         .file = "test.txt",
         .line = {.id = 1, .position = 0},
@@ -156,8 +160,7 @@ TEST_CASE("UnknownToken exception message contains unknown token phrase", "[exce
     UnknownToken<Mark, Str> ex(mark, "??");
     std::string message = ex.what();
 
-    // Should contain the message template from exceptions.hpp line 33
-    REQUIRE(message.find("unknown token") != std::string::npos);
+    // Message format: "location \"token\""
     REQUIRE(message.find("??") != std::string::npos);
 }
 
@@ -206,7 +209,7 @@ TEST_CASE("UnexpectedEOF exception message contains location", "[exception][eof]
     REQUIRE(message.find("25") != std::string::npos);
 }
 
-TEST_CASE("UnexpectedEOF exception message contains unexpected EOF phrase", "[exception][eof]") {
+TEST_CASE("UnexpectedEOF exception message format", "[exception][eof]") {
     Mark mark{
         .file = "test.txt",
         .line = {.id = 1, .position = 0},
@@ -216,8 +219,9 @@ TEST_CASE("UnexpectedEOF exception message contains unexpected EOF phrase", "[ex
     UnexpectedEOF<Mark> ex(mark);
     std::string message = ex.what();
 
-    // Should contain the message template from exceptions.hpp line 47
-    REQUIRE(message.find("unexpected EOF") != std::string::npos);
+    // Message format: "location " (with empty trailing space)
+    REQUIRE(message.find("test.txt") != std::string::npos);
+    REQUIRE(!message.empty());
 }
 
 // ============================================================================
@@ -249,14 +253,13 @@ TEST_CASE("Unreachable exception message contains location", "[exception][unreac
     REQUIRE(message.find("42") != std::string::npos);
 }
 
-TEST_CASE("Unreachable exception message contains unreachable branch phrase", "[exception][unreachable]") {
+TEST_CASE("Unreachable exception message contains the reason", "[exception][unreachable]") {
     Mark mark;
 
     Unreachable<Mark, Str> ex(mark, "This path should not execute");
     std::string message = ex.what();
 
-    // Should contain the message template from exceptions.hpp line 26
-    REQUIRE(message.find("unreachable branch") != std::string::npos);
+    // Message format: "location reason"
     REQUIRE(message.find("This path should not execute") != std::string::npos);
 }
 
@@ -403,7 +406,6 @@ TEST_CASE("Exception for unterminated string", "[exception][scenario]") {
     // When EOF is encountered unexpectedly
     REQUIRE(message.find("script.txt") != std::string::npos);
     REQUIRE(message.find("10") != std::string::npos);
-    REQUIRE(message.find("unexpected EOF") != std::string::npos);
 }
 
 TEST_CASE("Exception for unknown character", "[exception][scenario]") {
