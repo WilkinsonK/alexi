@@ -16,10 +16,16 @@ using namespace alexi;
 #define LANG_FILE "data.json"
 #endif
 
+const Kind JSON_STRING{
+    .pattern = R"("([^"\\]|\\.)*")",
+    .name    = "JSON_STRING",
+    .action  = Action::CONSUME | Action::MULTILINE,
+    .natural = false
+};
 const Vec<Kind> KINDS{
     kinds::COMMA,
     kinds::COLON,
-    kinds::LITERALSTR,
+    JSON_STRING,
     kinds::LITERALNUM,
     kinds::IDENTIFIER,
     kinds::BRACKETL,
@@ -135,7 +141,7 @@ template <>
 const Node Parser::parse<Node::Object>(void) {
     Node::Object obj;
     do {
-        auto key = parse<Str>(expect(kinds::LITERALSTR));
+        auto key = parse<Str>(expect(JSON_STRING));
         expect(kinds::COLON);
         auto val = parse();
         if (val.is<std::monostate>()) break;
@@ -148,7 +154,7 @@ const Node Parser::parse(void) {
     const auto t = eat();
     if (t == Vec<Kind>({kinds::UEOF, kinds::BRACER, kinds::BRACKETR}))
         return {};
-    if (t == kinds::LITERALSTR)
+    if (t == JSON_STRING)
         return parse<Str>(t);
     if (t == kinds::LITERALNUM)
         return parse<double>(t);
