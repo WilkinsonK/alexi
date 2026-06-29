@@ -28,4 +28,5 @@ if has_config("testing") then
     declare_suite("action", "action")
     declare_suite("location", "location")
     declare_suite("exception", "exception")
+    declare_suite("benchmark", "benchmark")
 end
