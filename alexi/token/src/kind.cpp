@@ -7,7 +7,7 @@ namespace alexi::kind {
         return std::make_shared<Self>(*this);
     }
 
-    const Self &Self::validate(void) const {
+    Self Self::validate(void) const {
         if (name.size() < 1)
             throw "Kind defined with no identifier";
         if (pattern.size() < 1)
