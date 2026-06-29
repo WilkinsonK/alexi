@@ -3,14 +3,15 @@
 #include <concepts>
 #include <format>
 #include <exception>
-#include <initializer_list>
 #include <ranges>
 
 #include "alexi/aliases.hpp"
 #include "alexi/location.hpp"
 
 namespace alexi::exceptions {
-    constexpr auto join_with(const Vec<Str> items, const StrV delim) {
+    template <std::ranges::range R>
+    requires std::convertible_to<std::ranges::range_value_t<R>, Str>
+    inline constexpr auto join_with(const R &items, const StrV delim) {
         auto join = items | std::views::join_with(delim);
         return Str(join.begin(), join.end());
     }
@@ -64,12 +65,10 @@ namespace alexi::exceptions {
             {}
     };
 
-    template <Location L>
+    template <Location L, std::convertible_to<Str> G, std::ranges::range E>
+    requires std::convertible_to<std::ranges::range_value_t<E>, Str>
     struct UnexpectedKind : public LexerException<L> {
-        UnexpectedKind(const L loc, const Str got, Vec<Str> expected) :
-            LexerException<L>(loc, "expected {} but got {}", join_with(expected, " or "), got)
-            {}
-        UnexpectedKind(const L loc, const Str got, std::initializer_list<Str> expected) :
+        UnexpectedKind(const L loc, const G got, const E &expected) :
             LexerException<L>(loc, "expected {} but got {}", join_with(expected, " or "), got)
             {}
     };
