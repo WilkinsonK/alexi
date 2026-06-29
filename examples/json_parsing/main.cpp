@@ -82,7 +82,6 @@ struct Node {
 
 struct Parser {
     private:
-    Token tokens[2];
     Lexer lexer;
 
     public:
