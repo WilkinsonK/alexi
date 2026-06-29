@@ -49,7 +49,7 @@ namespace alexi::kind {
 
         // Return a `shared_ptr` to the `Kind`.
         std::shared_ptr<Self> to_shared(void) const;
-        Self validate(void) const;
+        const Self &validate(void) const;
 
         bool operator==(const Self &) const;
         bool operator<(const Self &) const;
