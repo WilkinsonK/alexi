@@ -4,16 +4,26 @@ on:
     branches: [ "main", "release/*" ]
   pull_request:
     branches: [ "main", "release/*" ]
+
+env:
+  XMAKE_VERSION: "3.0.9"
+
 jobs:
   build:
     name: Test Local Build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Cache xmake binary
+      uses: actions/cache@v4
+      with:
+        path: ~/.xmake
+        key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
+        restore-keys: xmake-${{ runner.os }}-
     - name: Setup xmake
       uses: xmake-io/github-action-setup-xmake@v1
       with:
-        xmake-version: latest
+        xmake-version: ${{ env.XMAKE_VERSION }}
         build-cache: true
     - name: Build
       run: xmake build
@@ -22,31 +32,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Cache xmake binary
+      uses: actions/cache@v4
+      with:
+        path: ~/.xmake
+        key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
+        restore-keys: xmake-${{ runner.os }}-
     - name: Setup xmake
       uses: xmake-io/github-action-setup-xmake@v1
       with:
-        xmake-version: latest
+        xmake-version: ${{ env.XMAKE_VERSION }}
         build-cache: true
     - name: Build
       run: xmake f --testing=y -y && xmake build -y
-    - name: Test lexer
-      run: xmake test test_lexer/lexer
-    - name: Test matcher rules
-      run: xmake test test_match/match
-    - name: Test kind collection handling
-      run: xmake test test_token/kinds
-    - name: Test kind declaration
-      run: xmake test test_token/kind
+    - name: Run all tests
+      run: xmake test
   build_linux:
     name: Build Linux arm64
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Cache xmake binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.xmake
+          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
+          restore-keys: xmake-${{ runner.os }}-
       - name: Setup Xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
-          xmake-version: latest
+          xmake-version: ${{ env.XMAKE_VERSION }}
           build-cache: true
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
@@ -54,14 +71,21 @@ jobs:
         run: PLATFORM="linux" ARCH="arm64" TOOLCHAIN="@zig" scripts/cibuild.sh
   build_macos:
     name: Build macOS Universal
+    needs: test
     runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Cache xmake binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.xmake
+          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
+          restore-keys: xmake-${{ runner.os }}-
       - name: Setup Xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
-          xmake-version: latest
+          xmake-version: ${{ env.XMAKE_VERSION }}
           build-cache: true
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
@@ -69,14 +93,21 @@ jobs:
         run: PLATFORM="macosx" ARCH="x86_64,arm64" scripts/cibuild.sh
   build_win64:
     name: Build Windows x64
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Cache xmake binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.xmake
+          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
+          restore-keys: xmake-${{ runner.os }}-
       - name: Setup Xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
-          xmake-version: latest
+          xmake-version: ${{ env.XMAKE_VERSION }}
           build-cache: true
       - name: Install LLVM-MinGW Toolchain
         run: scripts/ciwinstall.sh >> $GITHUB_PATH

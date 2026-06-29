@@ -9,6 +9,9 @@ on:
     tags:
       - 'v*.*.*'
 
+env:
+  XMAKE_VERSION: "3.0.9"
+
 jobs:
   build_linux:
     name: Build Linux arm64
@@ -16,22 +19,26 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Cache xmake binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.xmake
+          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
+          restore-keys: xmake-${{ runner.os }}-
       - name: Setup Xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
-          xmake-version: latest
+          xmake-version: ${{ env.XMAKE_VERSION }}
           build-cache: true
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package Linux AArch64
         run: PLATFORM="linux" ARCH="arm64" TOOLCHAIN="@zig" scripts/cibuild.sh
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          files: release_packages/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: linux-arm64-artifacts
+          path: release_packages/
 
   build_macos:
     name: Build macOS Universal
@@ -39,22 +46,26 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Cache xmake binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.xmake
+          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
+          restore-keys: xmake-${{ runner.os }}-
       - name: Setup Xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
-          xmake-version: latest
+          xmake-version: ${{ env.XMAKE_VERSION }}
           build-cache: true
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package macOS Universal
         run: PLATFORM="macosx" ARCH="x86_64,arm64" scripts/cibuild.sh
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          files: release_packages/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: macos-universal-artifacts
+          path: release_packages/
 
   build_windows:
     name: Build Windows x64
@@ -62,10 +73,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Cache xmake binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.xmake
+          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
+          restore-keys: xmake-${{ runner.os }}-
       - name: Setup Xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
-          xmake-version: latest
+          xmake-version: ${{ env.XMAKE_VERSION }}
           build-cache: true
       - name: Install LLVM-MinGW Toolchain
         run: scripts/ciwinstall.sh >> $GITHUB_PATH
@@ -73,10 +90,31 @@ jobs:
         run: mkdir -p release_packages
       - name: Build & Package Windows x86_64
         run: PLATFORM="windows" ARCH="x64" TOOLCHAIN="mingw" scripts/cibuild.sh
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64-artifacts
+          path: release_packages/
+
+  create_release:
+    name: Create GitHub Release
+    needs: [build_linux, build_macos, build_windows]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-artifacts
+      - name: Prepare release files
+        run: |
+          mkdir -p release_files
+          find all-artifacts -type f -exec cp {} release_files/ \;
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: release_packages/*
+          files: release_files/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
