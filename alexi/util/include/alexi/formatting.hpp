@@ -11,11 +11,11 @@ constexpr auto parse(ParseContext &ctx) { \
 #define ALEXI_FORMAT(T, F, ...) \
 template <typename FormatContext> \
 auto format(const T& t, FormatContext& ctx) const { \
-    return format_to(ctx.out(), F, __VA_ARGS__); \
+    return std::format_to(ctx.out(), F, __VA_ARGS__); \
 }
 
 #define ALEXI_FORMATTER(T, F, ...) \
-template <> struct formatter<T> { \
+template <> struct std::formatter<T> { \
     ALEXI_PARSE(#T) \
     ALEXI_FORMAT(T, F, __VA_ARGS__) \
 }
