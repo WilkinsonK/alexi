@@ -44,7 +44,7 @@ namespace alexi::engine {
         // be transformed into a `Kind` definition and added
         // to the lexer matchers when a `Lexer` needs to be
         // generated.
-        Self use_keywords(const Str&);
+        Self &use_keywords(const Str&);
         // `Engine::use_keywords()` adds one or many strings
         // as special identifiers. These identifiers will be
         // used during token matching to determine if some
@@ -52,7 +52,7 @@ namespace alexi::engine {
         // be transformed into a `Kind` definition and added
         // to the lexer matchers when a `Lexer` needs to be
         // generated.
-        Self use_keywords(const Vec<Str>&);
+        Self &use_keywords(const Vec<Str>&);
         // `Engine::use_keywords()` adds one or many strings
         // as special identifiers. These identifiers will be
         // used during token matching to determine if some
@@ -60,21 +60,21 @@ namespace alexi::engine {
         // be transformed into a `Kind` definition and added
         // to the lexer matchers when a `Lexer` needs to be
         // generated.
-        Self use_keywords(const Vec<Str>::const_iterator&, const Vec<Str>::const_iterator&);
+        Self &use_keywords(const Vec<Str>::const_iterator&, const Vec<Str>::const_iterator&);
         // `Engine::use_kind()` adds one or many `Kind`s to
         // the engine's internal state. These `Kinds` will
         // be transformed into `Matcher`s once a `Lexer`
         // needs to be generated.
-        Self use_kinds(const Kind&);
+        Self &use_kinds(const Kind&);
         // `Engine::use_kind()` adds one or many `Kind`s to
         // the engine's internal state. These `Kinds` will
         // be transformed into `Matcher`s once a `Lexer`
         // needs to be generated.
-        Self use_kinds(const Vec<Kind>&);
+        Self &use_kinds(const Vec<Kind>&);
         // `Engine::use_kind()` adds one or many `Kind`s to
         // the engine's internal state. These `Kinds` will
         // be transformed into `Matcher`s once a `Lexer`
         // needs to be generated.
-        Self use_kinds(const Vec<Kind>::const_iterator&, const Vec<Kind>::const_iterator&);
+        Self &use_kinds(const Vec<Kind>::const_iterator&, const Vec<Kind>::const_iterator&);
     };
 }
