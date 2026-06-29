@@ -35,7 +35,7 @@ namespace alexi {
         MARK_DEF Offset position = POSITION_DEFAULT;
 
     ALEXI_STRUCT(Mark) {
-        #define MARK_DEF
+        #define MARK_DEF const
         MARK_ATTRS
         #undef MARK_DEF
 
@@ -80,7 +80,6 @@ namespace std {
     ALEXI_FORMATTER(
         Marker,
         "[{}@{}:{}]",
-        t.file.string(),
         t.line.id,
         t.position - t.line.position
     );

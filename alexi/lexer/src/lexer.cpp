@@ -1,8 +1,10 @@
+#include <format>
 #include <iterator>
 #include <memory>
 #include <regex>
+#include <stdexcept>
+#include <sstream>
 
-#include "alexi/exceptions.hpp"
 #include "alexi/lexer.hpp"
 #include "alexi/location.hpp"
 
@@ -32,9 +34,11 @@ namespace alexi::lexer {
             return next_token();
         }
         if (is_action(action, Action::UEOF))
-            throw UnexpectedEOF(marker);
+            throw std::runtime_error("Unexpected EOF");
 
-        throw UnknownToken(marker, token.view);
+        std::stringstream ss;
+        ss << "Unknown token " << token;
+        throw std::runtime_error(ss.str());
     }
 
     Token Self::match_next_token(void) {
@@ -49,7 +53,7 @@ namespace alexi::lexer {
             if (!t.has_value()) continue;
             return t.value();
         }
-        throw Unmatched(marker, Str(view));
+        throw std::runtime_error(std::format("Hit unreachable branch: no token matched '{}'", view));
     }
 
     Token Self::next_token(void) {
