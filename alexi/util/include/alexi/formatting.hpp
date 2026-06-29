@@ -20,7 +20,7 @@ template <> struct std::formatter<T> { \
     ALEXI_FORMAT(T, F, __VA_ARGS__) \
 }
 
-namespace alexi {
+namespace alexi::format {
     template <typename ParseContext, typename N>
     constexpr auto common_parse(ParseContext &ctx, N name) {
         auto it = ctx.begin();

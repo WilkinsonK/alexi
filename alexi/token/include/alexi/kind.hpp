@@ -60,8 +60,8 @@ namespace alexi::kind {
 }
 
 namespace std {
-    using namespace alexi;
     using namespace alexi::kind;
+    using namespace alexi::format;
     ALEXI_FORMATTER(
         Kind,
         "<Kind[pattern=\"{}\", name=\"{}\", action={}, order={}]>",
