@@ -40,7 +40,16 @@ namespace alexi::kind {
     }
 
     std::ostream &operator<<(std::ostream &os, const Self &kind) {
-        return os << std::format("{}", kind);
+        #define __structfield(N) "."#N"=" << kind . N
+        #define __structstrfield(N) "."#N"=\"" << kind . N << "\""
+        return os << "<Kind{" <<
+            __structstrfield(pattern) << ", " <<
+            __structstrfield(name) << ", " <<
+            __structfield(action) << ", " <<
+            __structfield(order) <<
+        "}>";
+        #undef __structstrfield
+        #undef __structfield
     }
 }
 

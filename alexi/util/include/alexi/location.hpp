@@ -1,8 +1,5 @@
 #pragma once
-#include <format>
-
 #include "alexi/aliases.hpp"
-#include "alexi/formatting.hpp"
 
 namespace alexi {
     ALEXI_STRUCT(MarkShifter) {
@@ -65,22 +62,4 @@ namespace alexi {
         Self operator>>(const MarkShifter&);
         operator Mark() const;
     };
-
-}
-
-namespace std {
-    using namespace alexi;
-    ALEXI_FORMATTER(
-        Mark,
-        "[{}@{}:{}]",
-        t.file.string(),
-        t.line.id,
-        t.position - t.line.position
-    );
-    ALEXI_FORMATTER(
-        Marker,
-        "[{}@{}:{}]",
-        t.line.id,
-        t.position - t.line.position
-    );
 }
