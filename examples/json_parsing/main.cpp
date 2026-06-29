@@ -1,8 +1,8 @@
 #include <algorithm>
+#include <concepts>
+#include <iostream>
 #include <initializer_list>
 #include <map>
-#include <ranges>
-#include <stdexcept>
 #include <string>
 #include <variant>
 
@@ -65,8 +65,19 @@ struct Node {
     Node(const T inner) : inner(inner) {}
 
     template <IsVariantOf<Inner> T>
-    inline bool is(void) const {
+    inline constexpr bool is(void) const {
         return std::holds_alternative<T>(inner);
+    }
+
+    Node operator[](const Ord &key) {
+        if (is<Array>()) return ((Array)*this)[key];
+        return std::monostate{};
+    }
+
+    template <std::convertible_to<Str> K>
+    Node operator[](const K &key) {
+        if (is<Object>()) return ((Object)*this)[key];
+        return std::monostate{};
     }
 
     template <IsVariantOf<Inner> T>
@@ -75,8 +86,8 @@ struct Node {
     }
 
     template <IsVariantOf<Inner> T>
-    bool operator==(const T&) const {
-        return is<T>();
+    bool operator==(const T&val) const {
+        return is<T>() && (T)(*this) == val;
     }
 };
 
@@ -201,5 +212,8 @@ Parser Alexi::from_file(Path path) {
 
 int main(int argc, const char *const *argv) {
     auto ast = Alexi().from_file(LANG_FILE).parse();
+    std::cout << "Age:                   " << (double)ast["age"] << std::endl;
+    std::cout << "Metadata.Nested.Level: " << (double)ast["metadata"]["nested"]["level"] << std::endl;
+    std::cout << "Scores:                " << (double)ast["scores"][1] << std::endl;
     return 0;
 }
