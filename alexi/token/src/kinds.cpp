@@ -53,7 +53,6 @@ namespace alexi::kinds {
             .pattern = pattern::IDENTIFIER,
             .name = "KEYWORD",
             .order = 0.7,
-            .natural = false,
             .predicate = [keywords](auto view) {
                 return std::find(
                     std::begin(keywords),

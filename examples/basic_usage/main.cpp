@@ -20,7 +20,7 @@ int main(void) {
     while (1) {
         auto t = lex.next_token();
         std::cout << t << std::endl;
-        if (t == "UEOF") break;
+        if (t == "EOF") break;
     }
     return 0;
 }

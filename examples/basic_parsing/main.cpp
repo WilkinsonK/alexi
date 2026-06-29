@@ -12,7 +12,6 @@
 using namespace std::literals;
 using namespace alexi;
 
-// #undef LANG_FILE
 #ifndef LANG_FILE
 #define LANG_FILE "lang.alexi"
 #endif
