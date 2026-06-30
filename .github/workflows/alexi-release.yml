@@ -35,8 +35,10 @@ jobs:
         run: PLATFORM="macos" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
-      - name: Build & Package macOS Universal
-        run: PLATFORM="macosx" ARCH=x86_64,arm64 scripts/cibuild.sh
+      - name: Build & Package macOS arm64
+        run: PLATFORM="macosx" ARCH=arm64 scripts/cibuild.sh
+      - name: Build & Package macOS x86_64
+        run: PLATFORM="macosx" ARCH=x86_64 scripts/cibuild.sh
   build_win64:
     name: Build Windows x64
     runs-on: ubuntu-latest
