@@ -17,3 +17,11 @@ if [[ $TARGET = "windows" ]]; then
     tar -xf llvm-mingw.tar.xz -C opt/llvm-mingw --strip-components=1
     echo "$GITHUB_WORKSPACE/opt/llvm-mingw/bin" >> $GITHUB_PATH
 fi
+
+if [[ $TARGET = "macos" ]]; then
+    # Install LLVM for macOS
+    curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/LLVM-${LLVM_VERSION}-macOS-ARM64.tar.xz
+    mkdir -p opt/llvm
+    tar -xf llvm.tar.xz -C opt/llvm --strip-components=1
+    echo "$GITHUB_WORKSPACE/opt/llvm/bin" >> $GITHUB_PATH
+fi
