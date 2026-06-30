@@ -44,8 +44,8 @@ are included before producing a lexer.
 |-|-|-|
 |**from_data**|2|`Lexer`|
 |**from_file**|2|`Lexer`|
-|**use_keywords**|3|`Engine`|
-|**use_kind**|3|`Engine`|
+|**use_keywords**|2|`Engine`|
+|**use_kind**|2|`Engine`|
 
 ### Kind
 The `Kind` type is an `Alexi` primitive. When declared, it describes the rules
