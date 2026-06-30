@@ -9,8 +9,7 @@
 #include "alexi/location.hpp"
 
 namespace alexi::exceptions {
-    template <std::ranges::range R>
-    requires std::convertible_to<std::ranges::range_value_t<R>, Str>
+    template <concepts::Ranged<Str> R>
     inline constexpr auto join_with(const R &items, const StrV delim) {
         auto join = items | std::views::join_with(delim);
         return Str(join.begin(), join.end());
