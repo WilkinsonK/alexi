@@ -16,7 +16,6 @@ env:
 jobs:
   build_linux:
     name: Build Linux
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -31,7 +30,6 @@ jobs:
         run: PLATFORM="linux" ARCH=x64 TOOLCHAIN="@zig" scripts/cibuild.sh
   build_macos:
     name: Build macOS
-    needs: test
     runs-on: macos-latest
     steps:
       - name: Checkout code
@@ -46,7 +44,6 @@ jobs:
         run: PLATFORM="macosx" ARCH=x86_64 scripts/cibuild.sh
   build_win64:
     name: Build Windows x64
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
