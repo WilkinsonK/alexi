@@ -10,7 +10,7 @@
 
 namespace alexi::exceptions {
     template <concepts::Ranged<Str> R>
-    inline constexpr auto join_with(const R &items, const StrV delim) {
+    inline auto join_with(const R &items, const StrV delim) {
         auto join = items | std::views::join_with(delim);
         return Str(join.begin(), join.end());
     }

@@ -7,7 +7,7 @@
 #include "alexi/location.hpp"
 
 namespace alexi::lexer {
-    inline constexpr LineNo line_count(const Str &view) {
+    inline LineNo line_count(const Str &view) {
         const std::regex NEWLINE_REGEX(R"(\r\n|\r|\n)");
         auto begin = std::sregex_iterator(view.begin(), view.end(), NEWLINE_REGEX);
         auto end   = std::sregex_iterator();
