@@ -9,62 +9,59 @@ env:
 jobs:
   build:
     name: Test Local Build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Install xmake
-      run: curl -fsSL https://xmake.io/shget.text | bash && echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: Install Toolchain
+      run: PLATFORM="linux" scripts/ciinstall.sh
     - name: Build
       run: xmake build
   test:
     name: Run Unit Tests
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Install xmake
-      run: curl -fsSL https://xmake.io/shget.text | bash && echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: Install Build Dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake ninja-build
+    - name: Install Toolchain
+      run: PLATFORM="linux" scripts/ciinstall.sh
     - name: Build
-      run: xmake f --testing=y -y && xmake build -y
+      run: xmake f --testing=y -y && xmake build -j 2 -y
     - name: Run all tests
       run: xmake test
   build_linux:
     name: Build Linux arm64
-    needs: test
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Install xmake
-        run: curl -fsSL https://xmake.io/shget.text | bash && echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install Toolchain
+        run: PLATFORM="linux" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package Linux AArch64
-        run: PLATFORM="linux" ARCH="arm64" TOOLCHAIN="@zig" scripts/cibuild.sh
+        run: PLATFORM="linux" ARCH=arm64 TOOLCHAIN="@zig" scripts/cibuild.sh
   build_macos:
     name: Build macOS Universal
-    needs: test
     runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Install xmake
-        run: curl -fsSL https://xmake.io/shget.text | bash && echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install Toolchain
+        run: PLATFORM="macos" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package macOS Universal
-        run: PLATFORM="macosx" ARCH="x86_64,arm64" scripts/cibuild.sh
+        run: PLATFORM="macosx" ARCH=x86_64,arm64 scripts/cibuild.sh
   build_win64:
     name: Build Windows x64
-    needs: test
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Install xmake
-        run: curl -fsSL https://xmake.io/shget.text | bash && echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - name: Install LLVM-MinGW Toolchain
-        run: scripts/ciwinstall.sh >> $GITHUB_PATH
+      - name: Install Toolchain
+        run: PLATFORM="linux" TARGET="windows" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package Windows x86_64
-        run: PLATFORM="windows" ARCH="x64" TOOLCHAIN="mingw" scripts/cibuild.sh
+        run: PLATFORM="windows" ARCH=x64 TOOLCHAIN="mingw" scripts/cibuild.sh
