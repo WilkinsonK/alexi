@@ -14,7 +14,7 @@ namespace alexi::lexer {
         return std::distance(begin, end);
     }
 
-    inline constexpr bool is_action(const Action action, const Action expect) {
+    inline bool is_action(const Action action, const Action expect) {
         return (action & expect) == expect;
     }
 

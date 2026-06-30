@@ -76,23 +76,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Cache xmake binary
-        uses: actions/cache@v4
-        with:
-          path: ~/.xmake
-          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
-          restore-keys: xmake-${{ runner.os }}-
-      - name: Install LLVM
-        run: brew install llvm
+      - name: Install LLVM & Xmake
+        run: brew install llvm xmake
       - name: Set LLVM as compiler
         run: |
           echo "CC=/opt/homebrew/opt/llvm/bin/clang" >> $GITHUB_ENV
           echo "CXX=/opt/homebrew/opt/llvm/bin/clang++" >> $GITHUB_ENV
-      - name: Setup Xmake
-        uses: xmake-io/github-action-setup-xmake@v1
-        with:
-          xmake-version: ${{ env.XMAKE_VERSION }}
-          build-cache: true
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package macOS Universal
