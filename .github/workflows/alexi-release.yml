@@ -42,7 +42,7 @@ jobs:
 
   build_macos:
     name: Build macOS Universal
-    runs-on: macos-13
+    runs-on: macos-12
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
