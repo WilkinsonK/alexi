@@ -10,7 +10,7 @@
 
 #define ALEXI_STRUCT(NAME, ...) struct NAME : public AlexiObject<NAME __VA_OPT__(<__VA_ARGS__>)>
 
-namespace alexi {
+namespace alexi::aliases {
     using File           = std::fstream;
     using Len            = std::size_t;
     using LineNo         = std::size_t;
@@ -32,9 +32,24 @@ namespace alexi {
         if (opt.has_value()) return os << "Some(" << opt.value() << ")";
         else return os << "None";
     }
+}
 
+namespace alexi::concepts {
+    template <typename R, typename Item>
+    concept Ranged =
+        std::ranges::range<R> &&
+        std::convertible_to<std::ranges::range_value_t<R>, Item>;
+}
+
+namespace alexi::types {
     template <typename S>
     struct AlexiObject {
         using Self = S;
     };
+}
+
+namespace alexi {
+    using namespace alexi::aliases;
+    using namespace alexi::concepts;
+    using alexi::types::AlexiObject;
 }
