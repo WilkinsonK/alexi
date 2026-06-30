@@ -82,6 +82,12 @@ jobs:
           path: ~/.xmake
           key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
           restore-keys: xmake-${{ runner.os }}-
+      - name: Install LLVM
+        run: brew install llvm
+      - name: Set LLVM as compiler
+        run: |
+          echo "CC=/opt/homebrew/opt/llvm/bin/clang" >> $GITHUB_ENV
+          echo "CXX=/opt/homebrew/opt/llvm/bin/clang++" >> $GITHUB_ENV
       - name: Setup Xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
