@@ -10,7 +10,7 @@
 
 namespace alexi::exceptions {
     template <concepts::Ranged<Str> R>
-    inline constexpr auto join_with(const R &items, const StrV delim) {
+    inline constexpr auto _join_with(const R &items, const StrV delim) {
         auto join = items | std::views::join_with(delim);
         return Str(join.begin(), join.end());
     }
@@ -68,7 +68,7 @@ namespace alexi::exceptions {
     requires std::convertible_to<std::ranges::range_value_t<E>, Str>
     struct UnexpectedKind : public LexerException<L> {
         UnexpectedKind(const L loc, const G got, const E &expected) :
-            LexerException<L>(loc, "expected {} but got {}", join_with(expected, " or "), got)
+            LexerException<L>(loc, "expected {} but got {}", _join_with(expected, " or "), got)
             {}
     };
 
