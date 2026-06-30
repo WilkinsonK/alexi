@@ -11,64 +11,39 @@ env:
 jobs:
   build:
     name: Test Local Build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Cache xmake binary
-      uses: actions/cache@v4
-      with:
-        path: ~/.xmake
-        key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
-        restore-keys: xmake-${{ runner.os }}-
-    - name: Setup xmake
-      uses: xmake-io/github-action-setup-xmake@v1
-      with:
-        xmake-version: ${{ env.XMAKE_VERSION }}
-        build-cache: true
+    - name: Install Toolchain
+      run: PLATFORM="linux" scripts/ciinstall.sh
     - name: Build
       run: xmake build
   test:
     name: Run Unit Tests
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Cache xmake binary
-      uses: actions/cache@v4
-      with:
-        path: ~/.xmake
-        key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
-        restore-keys: xmake-${{ runner.os }}-
-    - name: Setup xmake
-      uses: xmake-io/github-action-setup-xmake@v1
-      with:
-        xmake-version: ${{ env.XMAKE_VERSION }}
-        build-cache: true
+    - name: Install Build Dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake ninja-build
+    - name: Install Toolchain
+      run: PLATFORM="linux" scripts/ciinstall.sh
     - name: Build
-      run: xmake f --testing=y -y && xmake build -y
-    - name: Run all tests
+      run: xmake f --testing=y -y && xmake build -j 2 -y
+    - name: Run All Tests
       run: xmake test
   build_linux:
     name: Build Linux arm64
     needs: test
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Cache xmake binary
-        uses: actions/cache@v4
-        with:
-          path: ~/.xmake
-          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
-          restore-keys: xmake-${{ runner.os }}-
-      - name: Setup Xmake
-        uses: xmake-io/github-action-setup-xmake@v1
-        with:
-          xmake-version: ${{ env.XMAKE_VERSION }}
-          build-cache: true
+      - name: Install Toolchain
+        run: PLATFORM="linux" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package Linux AArch64
-        run: PLATFORM="linux" ARCH="arm64" TOOLCHAIN="@zig" scripts/cibuild.sh
+        run: PLATFORM="linux" ARCH=arm64 TOOLCHAIN="@zig" scripts/cibuild.sh
   build_macos:
     name: Build macOS Universal
     needs: test
@@ -76,37 +51,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Install LLVM & Xmake
-        run: brew install llvm xmake
-      - name: Set LLVM as compiler
-        run: |
-          echo "CC=/opt/homebrew/opt/llvm/bin/clang" >> $GITHUB_ENV
-          echo "CXX=/opt/homebrew/opt/llvm/bin/clang++" >> $GITHUB_ENV
+      - name: Install Toolchain
+        run: PLATFORM="macos" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package macOS Universal
-        run: PLATFORM="macosx" ARCH="x86_64,arm64" scripts/cibuild.sh
+        run: PLATFORM="macosx" ARCH=x86_64,arm64 scripts/cibuild.sh
   build_win64:
     name: Build Windows x64
     needs: test
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Cache xmake binary
-        uses: actions/cache@v4
-        with:
-          path: ~/.xmake
-          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
-          restore-keys: xmake-${{ runner.os }}-
-      - name: Setup Xmake
-        uses: xmake-io/github-action-setup-xmake@v1
-        with:
-          xmake-version: ${{ env.XMAKE_VERSION }}
-          build-cache: true
-      - name: Install LLVM-MinGW Toolchain
-        run: scripts/ciwinstall.sh >> $GITHUB_PATH
+      - name: Install Toolchain
+        run: PLATFORM="linux" TARGET="windows" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package Windows x86_64
-        run: PLATFORM="windows" ARCH="x64" TOOLCHAIN="mingw" scripts/cibuild.sh
+        run: PLATFORM="windows" ARCH=x64 TOOLCHAIN="mingw" scripts/cibuild.sh

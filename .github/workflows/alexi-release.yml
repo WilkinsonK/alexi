@@ -15,86 +15,40 @@ env:
 jobs:
   build_linux:
     name: Build Linux arm64
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Cache xmake binary
-        uses: actions/cache@v4
-        with:
-          path: ~/.xmake
-          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
-          restore-keys: xmake-${{ runner.os }}-
-      - name: Setup Xmake
-        uses: xmake-io/github-action-setup-xmake@v1
-        with:
-          xmake-version: ${{ env.XMAKE_VERSION }}
-          build-cache: true
+      - name: Install Toolchain
+        run: PLATFORM="linux" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package Linux AArch64
-        run: PLATFORM="linux" ARCH="arm64" TOOLCHAIN="@zig" scripts/cibuild.sh
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-arm64-artifacts
-          path: release_packages/
-
+        run: PLATFORM="linux" ARCH=arm64 TOOLCHAIN="@zig" scripts/cibuild.sh
   build_macos:
     name: Build macOS Universal
     runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Setup Xmake
-        uses: xmake-io/github-action-setup-xmake@v1
-        with:
-          xmake-version: ${{ env.XMAKE_VERSION }}
-          build-cache: true
-      - name: Install LLVM
-        run: brew install llvm xmake
-      - name: Set LLVM as compiler
-        run: |
-          echo "CC=/opt/homebrew/opt/llvm/bin/clang" >> $GITHUB_ENV
-          echo "CXX=/opt/homebrew/opt/llvm/bin/clang++" >> $GITHUB_ENV
+      - name: Install Toolchain
+        run: PLATFORM="macos" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package macOS Universal
-        run: PLATFORM="macosx" ARCH="x86_64,arm64" scripts/cibuild.sh
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: macos-universal-artifacts
-          path: release_packages/
-
-  build_windows:
+        run: PLATFORM="macosx" ARCH=x86_64,arm64 scripts/cibuild.sh
+  build_win64:
     name: Build Windows x64
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Cache xmake binary
-        uses: actions/cache@v4
-        with:
-          path: ~/.xmake
-          key: xmake-${{ runner.os }}-${{ env.XMAKE_VERSION }}
-          restore-keys: xmake-${{ runner.os }}-
-      - name: Setup Xmake
-        uses: xmake-io/github-action-setup-xmake@v1
-        with:
-          xmake-version: ${{ env.XMAKE_VERSION }}
-          build-cache: true
-      - name: Install LLVM-MinGW Toolchain
-        run: scripts/ciwinstall.sh >> $GITHUB_PATH
+      - name: Install Toolchain
+        run: PLATFORM="linux" TARGET="windows" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package Windows x86_64
-        run: PLATFORM="windows" ARCH="x64" TOOLCHAIN="mingw" scripts/cibuild.sh
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-x64-artifacts
-          path: release_packages/
+        run: PLATFORM="windows" ARCH=x64 TOOLCHAIN="mingw" scripts/cibuild.sh
 
   create_release:
     name: Create GitHub Release
