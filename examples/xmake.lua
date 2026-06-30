@@ -10,6 +10,7 @@ if has_config("examples") then
         add_files("basic_usage/main.cpp")
         add_deps("alexi")
 
+
     target("json_parsing")
         set_kind("binary")
         add_files("json_parsing/main.cpp")
