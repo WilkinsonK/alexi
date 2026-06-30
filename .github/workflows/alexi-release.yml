@@ -57,6 +57,12 @@ jobs:
         with:
           xmake-version: ${{ env.XMAKE_VERSION }}
           build-cache: true
+      - name: Install LLVM
+        run: brew install llvm
+      - name: Set LLVM as compiler
+        run: |
+          echo "CC=/opt/homebrew/opt/llvm/bin/clang" >> $GITHUB_ENV
+          echo "CXX=/opt/homebrew/opt/llvm/bin/clang++" >> $GITHUB_ENV
       - name: Prepare Artifacts Directory
         run: mkdir -p release_packages
       - name: Build & Package macOS Universal
