@@ -31,7 +31,7 @@ jobs:
     - name: Run all tests
       run: xmake test
   build_linux:
-    name: Build Linux arm64
+    name: Build Linux
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -42,8 +42,10 @@ jobs:
         run: mkdir -p release_packages
       - name: Build & Package Linux AArch64
         run: PLATFORM="linux" ARCH=arm64 TOOLCHAIN="@zig" scripts/cibuild.sh
+      - name: Build & Package Linux x86_64
+        run: PLATFORM="linux" ARCH=x64 TOOLCHAIN="@zig" scripts/cibuild.sh
   build_macos:
-    name: Build macOS Universal
+    name: Build macOS
     runs-on: macos-latest
     steps:
       - name: Checkout code
