@@ -24,4 +24,16 @@ if [[ $TARGET = "macos" ]]; then
     mkdir -p opt/llvm
     tar -xf llvm.tar.xz -C opt/llvm --strip-components=1
     echo "$GITHUB_WORKSPACE/opt/llvm/bin" >> $GITHUB_PATH
+
+    # Configure LLVM to use macOS SDK and libc++
+    export CC="$GITHUB_WORKSPACE/opt/llvm/bin/clang"
+    export CXX="$GITHUB_WORKSPACE/opt/llvm/bin/clang++"
+    export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
+    export CXXFLAGS="-stdlib=libc++ -isysroot $(xcrun --sdk macosx --show-sdk-path)"
+
+    # Export for use in subsequent steps
+    echo "CC=$CC" >> $GITHUB_ENV
+    echo "CXX=$CXX" >> $GITHUB_ENV
+    echo "SDKROOT=$SDKROOT" >> $GITHUB_ENV
+    echo "CXXFLAGS=$CXXFLAGS" >> $GITHUB_ENV
 fi
