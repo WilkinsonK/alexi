@@ -5,6 +5,7 @@ on:
 env:
   XMAKE_VERSION: "3.0.9"
   XMAKE_ROOT: y
+  LLVM_VERSION: "22.1.8"
 
 jobs:
   build:
