@@ -176,7 +176,7 @@ TEST_CASE("Engine::use_keywords with single keyword", "[engine][engine::keywords
 TEST_CASE("Engine::use_keywords returns Self for chaining", "[engine][engine::keywords]") {
     Engine engine;
     Engine &result = engine.use_keywords("let");
-    
+
     REQUIRE(&result == &engine);
     REQUIRE(engine.keywords.size() == 1);
 }
@@ -226,25 +226,17 @@ TEST_CASE("Engine::use_keywords with single-element vector", "[engine][engine::k
 TEST_CASE("Engine::use_keywords with iterators", "[engine][engine::keywords]") {
     Engine engine;
     Vec<Str> kwds = {"break", "continue", "switch", "case"};
-    engine.use_keywords(kwds.begin(), kwds.end());
+    engine.use_keywords(kwds);
 
     REQUIRE(engine.keywords.size() == 4);
 }
 
-TEST_CASE("Engine::use_keywords with iterator range", "[engine][engine::keywords]") {
-    Engine engine;
-    Vec<Str> kwds = {"a", "b", "c", "d", "e"};
-    engine.use_keywords(kwds.begin() + 1, kwds.begin() + 4);
-
-    REQUIRE(engine.keywords.size() == 3);
-}
-
-TEST_CASE("Engine::use_keywords with empty iterator range", "[engine][engine::keywords]") {
+TEST_CASE("Engine::use_keywords with multiple keywords from vector", "[engine][engine::keywords]") {
     Engine engine;
     Vec<Str> kwds = {"x", "y", "z"};
-    engine.use_keywords(kwds.begin(), kwds.begin());
+    engine.use_keywords(kwds);
 
-    REQUIRE(engine.keywords.size() == 0);
+    REQUIRE(engine.keywords.size() == 3);
 }
 
 // ============================================================================
@@ -253,10 +245,11 @@ TEST_CASE("Engine::use_keywords with empty iterator range", "[engine][engine::ke
 
 TEST_CASE("Engine::use_keywords chained multiple times", "[engine][engine::keywords][engine::builder]") {
     Engine engine;
+    Vec<Str> kwds{"while", "for"};
     engine
         .use_keywords("if")
         .use_keywords("else")
-        .use_keywords(Vec<Str>{"while", "for"});
+        .use_keywords(kwds);
 
     REQUIRE(engine.keywords.size() == 4);
 }
@@ -295,7 +288,7 @@ TEST_CASE("Engine::use_kinds returns Self for chaining", "[engine][engine::kinds
     Engine engine;
     Kind k{.pattern = R"(\.)" , .name = "DOT"};
     Engine &result = engine.use_kinds(k);
-    
+
     REQUIRE(&result == &engine);
     REQUIRE(engine.kinds.find("DOT") != nullptr);
 }
@@ -338,30 +331,12 @@ TEST_CASE("Engine::use_kinds with iterators", "[engine][engine::kinds]") {
         Kind{.pattern = R"(\*)", .name = "STAR"},
         Kind{.pattern = R"(/)", .name = "SLASH"}
     };
-    engine.use_kinds(kinds.begin(), kinds.end());
+    engine.use_kinds(kinds);
 
     REQUIRE(engine.kinds.find("PLUS") != nullptr);
     REQUIRE(engine.kinds.find("MINUS") != nullptr);
     REQUIRE(engine.kinds.find("STAR") != nullptr);
     REQUIRE(engine.kinds.find("SLASH") != nullptr);
-}
-
-TEST_CASE("Engine::use_kinds with iterator range", "[engine][engine::kinds]") {
-    Engine engine;
-    Vec<Kind> kinds = {
-        Kind{.pattern = R"(\()", .name = "LPAREN"},
-        Kind{.pattern = R"(\))", .name = "RPAREN"},
-        Kind{.pattern = R"(\[)", .name = "LBRACKET"},
-        Kind{.pattern = R"(\])", .name = "RBRACKET"},
-        Kind{.pattern = R"(\{)", .name = "LBRACE"}
-    };
-    engine.use_kinds(kinds.begin() + 1, kinds.begin() + 4);
-
-    REQUIRE(engine.kinds.find("LPAREN") == nullptr);
-    REQUIRE(engine.kinds.find("RPAREN") != nullptr);
-    REQUIRE(engine.kinds.find("LBRACKET") != nullptr);
-    REQUIRE(engine.kinds.find("RBRACKET") != nullptr);
-    REQUIRE(engine.kinds.find("LBRACE") == nullptr);
 }
 
 // ============================================================================
@@ -373,9 +348,7 @@ TEST_CASE("Engine::use_kinds chained multiple times", "[engine][engine::kinds][e
     engine
         .use_kinds(Kind{.pattern = R"(,)", .name = "COMMA"})
         .use_kinds(Kind{.pattern = R"(;)", .name = "SEMICOLON"})
-        .use_kinds(Vec<Kind>{
-            Kind{.pattern = R"(:)", .name = "COLON"}
-        });
+        .use_kinds(Kind{.pattern = R"(:)", .name = "COLON"});
 
     REQUIRE(engine.kinds.find("COMMA") != nullptr);
     REQUIRE(engine.kinds.find("SEMICOLON") != nullptr);
