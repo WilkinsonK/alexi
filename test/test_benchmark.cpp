@@ -137,12 +137,12 @@ TEST_CASE("BENCHMARK: Lexer creation with builtin kinds", "[benchmark][lexer]") 
 
 TEST_CASE("BENCHMARK: Lexer creation with many custom kinds", "[benchmark][lexer]") {
     Engine engine;
-    
+
     // Add multiple custom kinds (simulates real usage)
     for (int i = 0; i < 10; ++i) {
-        engine.use_kinds({
-            {.pattern = R"(\w+)", .name = "IDENT_" + std::to_string(i)},
-        });
+        engine.use_kinds(
+            {.pattern = R"(\w+)", .name = "IDENT_" + std::to_string(i)}
+        );
     }
 
     Str data = "hello world";
@@ -350,7 +350,7 @@ TEST_CASE("BENCHMARK: Matcher creation - complex pattern", "[benchmark][compilat
 
 TEST_CASE("BENCHMARK: Matcher creation from Kind", "[benchmark][compilation]") {
     Kind k{.pattern = R"(\d+)", .name = "NUMBER"};
-    
+
     BENCHMARK("Create Matcher from Kind") {
         return Matcher::from(k);
     };
@@ -366,10 +366,10 @@ TEST_CASE("BENCHMARK: Full pipeline - Engine → Lexer → Tokens (small)", "[be
         ks.add(kinds::IDENTIFIER);
         ks.add(kinds::WHITESPACE);
         ks.add(kinds::UNKNOWN);
-        
+
         Str data = generate_identifier_sequence(10);
         Lexer lexer{.marker = {}, .matchers = ks, .data = data};
-        
+
         Vec<Token> tokens;
         while (1) {
             auto t = lexer.next_token();
@@ -386,10 +386,10 @@ TEST_CASE("BENCHMARK: Full pipeline - Engine → Lexer → Tokens (medium)", "[b
         ks.add(kinds::IDENTIFIER);
         ks.add(kinds::WHITESPACE);
         ks.add(kinds::UNKNOWN);
-        
+
         Str data = generate_identifier_sequence(100);
         Lexer lexer{.marker = {}, .matchers = ks, .data = data};
-        
+
         Vec<Token> tokens;
         while (1) {
             auto t = lexer.next_token();
@@ -413,7 +413,7 @@ TEST_CASE("BENCHMARK: Matching with predicate validation", "[benchmark][predicat
             return s == "if" || s == "else" || s == "while" || s == "for";
         }
     };
-    
+
     Matcher m = Matcher::from(keyword_kind);
     Str input = "while";
     Mark mark;
@@ -432,7 +432,7 @@ TEST_CASE("BENCHMARK: Matching with predicate validation (no match)", "[benchmar
             return s == "if" || s == "else" || s == "while" || s == "for";
         }
     };
-    
+
     Matcher m = Matcher::from(keyword_kind);
     Str input = "myvar";  // Not a keyword
     Mark mark;
