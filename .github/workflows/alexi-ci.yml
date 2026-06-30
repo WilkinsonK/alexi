@@ -7,7 +7,6 @@ on:
 
 env:
   XMAKE_VERSION: "3.0.9"
-  LLVM_VERSION: "22.1.8"
 
 jobs:
   build:
@@ -54,6 +53,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Cache Homebrew packages
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Caches/Homebrew
+          key: ${{ runner.os }}-brew-llvm22
+          restore-keys: ${{ runner.os }}-brew-llvm22
       - name: Install Toolchain
         run: PLATFORM="macos" scripts/ciinstall.sh
       - name: Prepare Artifacts Directory

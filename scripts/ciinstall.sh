@@ -19,15 +19,15 @@ if [[ $TARGET = "windows" ]]; then
 fi
 
 if [[ $TARGET = "macos" ]]; then
-    # Install LLVM for macOS
-    curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/LLVM-${LLVM_VERSION}-macOS-ARM64.tar.xz
-    mkdir -p opt/llvm
-    tar -xf llvm.tar.xz -C opt/llvm --strip-components=1
-    echo "$GITHUB_WORKSPACE/opt/llvm/bin" >> $GITHUB_PATH
+    # Install LLVM via Homebrew
+    brew install llvm@22
+
+    LLVM_PREFIX="$(brew --prefix llvm@22)"
+    echo "$LLVM_PREFIX/bin" >> $GITHUB_PATH
 
     # Configure LLVM to use macOS SDK and libc++
-    export CC="$GITHUB_WORKSPACE/opt/llvm/bin/clang"
-    export CXX="$GITHUB_WORKSPACE/opt/llvm/bin/clang++"
+    export CC="$LLVM_PREFIX/bin/clang"
+    export CXX="$LLVM_PREFIX/bin/clang++"
     export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
     export CXXFLAGS="-stdlib=libc++ -isysroot $(xcrun --sdk macosx --show-sdk-path)"
 
