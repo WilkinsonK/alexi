@@ -139,9 +139,9 @@ const Node Parser::parse<double>(const Token &t) {
 template <>
 const Node Parser::parse<Node::Array>(void) {
     Node::Array arr;
+    Node val;
     do {
-        auto val = parse();
-        if (val.is<std::monostate>()) break;
+        if (val = parse(); val.is<std::monostate>()) break;
         arr.push_back(val);
     } while(expect(kinds::COMMA, kinds::BRACKETR) != kinds::BRACKETR);
     return arr;
@@ -150,11 +150,11 @@ const Node Parser::parse<Node::Array>(void) {
 template <>
 const Node Parser::parse<Node::Object>(void) {
     Node::Object obj;
+    Node key, val;
     do {
-        auto key = parse<Str>(expect(JSON_STRING));
+        key = parse<Str>(expect(JSON_STRING));
         expect(kinds::COLON);
-        auto val = parse();
-        if (val.is<std::monostate>()) break;
+        if (val = parse(); val.is<std::monostate>()) break;
         obj[key] = val;
     } while (expect(kinds::COMMA, kinds::BRACER) != kinds::BRACER);
     return obj;
