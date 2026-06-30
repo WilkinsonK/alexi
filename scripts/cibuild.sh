@@ -5,7 +5,7 @@ ARCH=${ARCH:-arm64}
 TOOLCHAIN=${TOOLCHAIN:-@zig}
 
 if [[ $PLATFORM = "macosx" ]]; then
-    ARCHIVE_NAME=alexi-${PLATFORM}-universal
+    ARCHIVE_NAME=alexi-${PLATFORM}-${ARCH}
     INSTALL_NAME=staging_macos
 else
     ARCHIVE_NAME=alexi-${PLATFORM}-${ARCH}
