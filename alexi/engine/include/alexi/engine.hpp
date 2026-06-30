@@ -1,9 +1,13 @@
 #pragma once
 
+#include <algorithm>
+#include <initializer_list>
+
 #include "alexi/aliases.hpp"
 #include "alexi/kind.hpp"
 #include "alexi/kinds.hpp"
 #include "alexi/lexer.hpp"
+#include <initializer_list>
 
 namespace alexi::engine {
     struct Engine;
@@ -44,7 +48,11 @@ namespace alexi::engine {
         // be transformed into a `Kind` definition and added
         // to the lexer matchers when a `Lexer` needs to be
         // generated.
-        Self &use_keywords(const Str&);
+        template <typename ...Arg>
+        requires (sizeof...(Arg) > 0) && (!Ranged<Arg, Str> && ...)
+        Self &use_keywords(Arg && ...kwds) {
+            return use_keywords<std::initializer_list<Str>>({kwds...});
+        }
         // `Engine::use_keywords()` adds one or many strings
         // as special identifiers. These identifiers will be
         // used during token matching to determine if some
@@ -52,29 +60,38 @@ namespace alexi::engine {
         // be transformed into a `Kind` definition and added
         // to the lexer matchers when a `Lexer` needs to be
         // generated.
-        Self &use_keywords(const Vec<Str>&);
-        // `Engine::use_keywords()` adds one or many strings
-        // as special identifiers. These identifiers will be
-        // used during token matching to determine if some
-        // unknown identifier is a keyword or not. This will
-        // be transformed into a `Kind` definition and added
-        // to the lexer matchers when a `Lexer` needs to be
-        // generated.
-        Self &use_keywords(const Vec<Str>::const_iterator&, const Vec<Str>::const_iterator&);
+        template <Ranged<Str> R>
+        Self &use_keywords(const R &kwds) {
+            keywords.insert(keywords.begin(), kwds.begin(), kwds.end());
+            return *this;
+        }
         // `Engine::use_kind()` adds one or many `Kind`s to
         // the engine's internal state. These `Kinds` will
         // be transformed into `Matcher`s once a `Lexer`
         // needs to be generated.
-        Self &use_kinds(const Kind&);
+        Self &use_kinds(const Kind &kind) {
+            kinds.add(kind);
+            return *this;
+        }
         // `Engine::use_kind()` adds one or many `Kind`s to
         // the engine's internal state. These `Kinds` will
         // be transformed into `Matcher`s once a `Lexer`
         // needs to be generated.
-        Self &use_kinds(const Vec<Kind>&);
+        template <typename ...Arg>
+        requires (sizeof...(Arg) > 0) && (!Ranged<Arg, Kind> && ...)
+        Self &use_kinds(Arg && ...kinds) {
+            return use_kinds<std::initializer_list<Kind>>({kinds...});
+        }
         // `Engine::use_kind()` adds one or many `Kind`s to
         // the engine's internal state. These `Kinds` will
         // be transformed into `Matcher`s once a `Lexer`
         // needs to be generated.
-        Self &use_kinds(const Vec<Kind>::const_iterator&, const Vec<Kind>::const_iterator&);
+        template <Ranged<Kind> R>
+        Self &use_kinds(const R &k) {
+            std::for_each(k.begin(), k.end(), [&](const auto &kind) {
+                kinds.add(kind);
+            });
+            return *this;
+        }
     };
 }
