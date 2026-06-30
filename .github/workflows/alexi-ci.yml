@@ -11,7 +11,7 @@ env:
 jobs:
   build:
     name: Test Local Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
     - name: Cache xmake binary
@@ -50,7 +50,7 @@ jobs:
   build_linux:
     name: Build Linux arm64
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -72,7 +72,7 @@ jobs:
   build_macos:
     name: Build macOS Universal
     needs: test
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -94,7 +94,7 @@ jobs:
   build_win64:
     name: Build Windows x64
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

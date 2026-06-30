@@ -15,7 +15,7 @@ env:
 jobs:
   build_linux:
     name: Build Linux arm64
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -42,7 +42,7 @@ jobs:
 
   build_macos:
     name: Build macOS Universal
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -69,7 +69,7 @@ jobs:
 
   build_windows:
     name: Build Windows x64
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
