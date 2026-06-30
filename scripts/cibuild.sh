@@ -24,7 +24,7 @@ if [[ $PLATFORM = "windows" ]]; then
     xmake f -m release -p ${PLATFORM} -a ${ARCH} --toolchain=${TOOLCHAIN} --sdk=$GITHUB_WORKSPACE/opt/llvm-mingw
 fi
 
-xmake
+xmake -j $(nproc)
 xmake install -o ${INSTALL_NAME}
 
 if [[ $PLATFORM = "windows" ]]; then
