@@ -3,7 +3,7 @@
     "label": "refresh",
     "command": "scripts/refresh.sh",
     "use_new_terminal": false,
-    "allow_concurrent_runs": false,
+    "allow_concurrent_runs": false
   },
   {
     "label": "test",
@@ -27,14 +27,32 @@
     "reveal": "always"
   },
   {
-    "label": "GitHub Actions: Run All Local Workflows",
-    "command": "act",
+    "label": "workflow:build",
+    "command": "cd $ZED_WORKTREE_ROOT && act --container-architecture linux/amd64 -W $ZED_WORKTREE_ROOT/.github/workflows/alexi-ci-local.yml -j build",
     "use_new_terminal": false,
     "allow_concurrent_runs": false
   },
   {
-    "label": "GitHub Actions: Run Specific Job",
-    "command": "act -j ",
+    "label": "workflow:test",
+    "command": "cd $ZED_WORKTREE_ROOT && act --container-architecture linux/amd64 -W $ZED_WORKTREE_ROOT/.github/workflows/alexi-ci-local.yml -j test",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false
+  },
+  {
+    "label": "workflow:build_linux",
+    "command": "cd $ZED_WORKTREE_ROOT && act --container-architecture linux/amd64 -W $ZED_WORKTREE_ROOT/.github/workflows/alexi-ci-local.yml -j build_linux",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false
+  },
+  {
+    "label": "workflow:build_macos",
+    "command": "cd $ZED_WORKTREE_ROOT && act --container-architecture linux/amd64 -W $ZED_WORKTREE_ROOT/.github/workflows/alexi-ci-local.yml -j build_macos",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false
+  },
+  {
+    "label": "workflow:build_win64",
+    "command": "cd $ZED_WORKTREE_ROOT && act --container-architecture linux/amd64 -W $ZED_WORKTREE_ROOT/.github/workflows/alexi-ci-local.yml -j build_win64",
     "use_new_terminal": false,
     "allow_concurrent_runs": false
   }
