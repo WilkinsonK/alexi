@@ -16,12 +16,12 @@ namespace alexi::engine {
         return matchers;
     };
 
-    inline constexpr Str read(File &fd) {
+    inline Str read(File &fd) {
         using iter = std::istreambuf_iterator<char>;
         return Str((iter(fd)), iter());
     }
 
-    inline constexpr File open(const Path &path) {
+    inline File open(const Path &path) {
         File fd(path);
         if (fd) return fd;
         auto src = path.string();
