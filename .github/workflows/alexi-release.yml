@@ -28,6 +28,11 @@ jobs:
         run: PLATFORM="linux" ARCH=arm64 TOOLCHAIN="@zig" scripts/cibuild.sh
       - name: Build & Package Linux x86_64
         run: PLATFORM="linux" ARCH=x64 TOOLCHAIN="@zig" scripts/cibuild.sh
+      - name: Upload Linux Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-artifacts
+          path: release_packages/
   build_macos:
     name: Build macOS
     runs-on: macos-latest
@@ -42,6 +47,11 @@ jobs:
         run: PLATFORM="macosx" ARCH=arm64 scripts/cibuild.sh
       - name: Build & Package macOS x86_64
         run: PLATFORM="macosx" ARCH=x86_64 scripts/cibuild.sh
+      - name: Upload macOS Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-artifacts
+          path: release_packages/
   build_win64:
     name: Build Windows x64
     runs-on: ubuntu-latest
@@ -54,6 +64,11 @@ jobs:
         run: mkdir -p release_packages
       - name: Build & Package Windows x86_64
         run: PLATFORM="windows" ARCH=x64 TOOLCHAIN="mingw" scripts/cibuild.sh
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifacts
+          path: release_packages/
 
   create_release:
     name: Create GitHub Release
